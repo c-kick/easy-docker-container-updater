@@ -83,60 +83,68 @@ const containers = {
 	// The name to use for this container
 	'plex': {
 	
-	    // OPTIONAL - Debug override - If set to true, this override the global debug flag, specifically for this container,
-	    // and will NOT actually run any docker-commands, and instead outputs the commands to the console
-	    // (useful for testing your configuration).
-	    debug: true, 
+	    	// OPTIONAL - Debug override - If set to true, this override the global debug flag, specifically for this container,
+	    	// and will NOT actually run any docker-commands, and instead outputs the commands to the console
+	    	// (useful for testing your configuration).
+	    	debug: true, 
 	
-	    // The repository & image to use
-	    image: 'plexinc/pms-docker:plexpass',
+	    	// The repository & image to use
+	    	image: 'plexinc/pms-docker:plexpass',
 	
-	    // The arguments that will be passed to docker create
-	    // Note: all arguments are optional.
-	    arguments: {
+	    	// The arguments that will be passed to docker create
+	    	// Note: all arguments are optional.
+		arguments: {
 	
-	        // Volume mappings
-	        v: [ 
-	          ['/my-custom/path-1', '/path-1/'],
-	          servarr_options.downloads,
-	          //add more if needed
-	        ],
+		        // Volume mappings
+		        v: [ 
+				['/my-custom/path-1', '/path-1/'],
+				servarr_options.downloads,
+				//add more if needed
+		        ],
+		
+		        // Environment variables
+		        e: [
+				['TZ', 'Europe/Amsterdam'],
+				['PLEX_UID', 1234],
+				['PLEX_GID', 56789],
+				//add more if needed
+		        ],
+
+			// If you need ports (i.e. in bridge mode)
+			// specify them here, as [host-side-port, container-side-port]
+			// p: [
+			//   	[8000, 80],
+			// ],
+		
+		        // Device mappings
+		        device: [
+		          	['/dev/dri', '/dev/dri'],
+		          	//add more if needed
+		        ],
+
+		        // Privileged mode
+		        privileged: 	true,
+		
+		        // Memory limit
+		        memory:    	'768m',
+		
+		        // Restart policy
+		        restart: 	'always',
+		},
 	
-	        // Environment variables
-	        e: [
-	           ['TZ', 'Europe/Amsterdam'],
-	           ['PLEX_UID', 1234],
-	           ['PLEX_GID', 56789],
-	          //add more if needed
-	        ],
+	    	// Set network mode (bridge, host, etc)
+	    	network: 'host',
 	
-	        // Device mappings
-	        device: [
-	          ['/dev/dri', '/dev/dri'],
-	          //add more if needed
-	        ],
-	
-	        // Privileged mode
-	        privileged: true,
-	
-	        // Memory limit
-	        memory:     '768m',
-	
-	        // Restart policy
-	        restart: 	'always',
-			},
-	
-	    // Set network mode (bridge, host, etc)
-	    network: 'host',
-	
-	    // Set alwaysrun - if true, this will force the container to run, even when it was stopped prior to updating
-	    alwaysrun: false
+	    	// Set alwaysrun - if true, this will force the container to run, even when it was stopped prior to updating
+	    	alwaysrun: false
 
 	},
 
 	//Add more configurations as needed
 }
 ```
+
+Note: you can basically assign anything you want to the `arguments` array; it will eventually get flattened into a `docker create` command. If the defined key is one character, it will be passed as `-f <values>`, and otherwise as `--foo <values>`.
 
 ## Running the script
 
