@@ -18,7 +18,57 @@ Breakdown:
 - `<forced>` - (optional) Set `true` if you want to force-update a container, even when its image has no available update.
 
 ## Configuration
-First, adjust the `options` object to fit your configuration. Descriptions are commented inside of it to guide you through the settings.
+First, adjust the `options` object to fit your configuration.
+
+```JavaScript
+const options = {
+	// email report options
+	email_from:	'docker_updater@your-domain.com', //the e-mail address that will be used as a sender address for the update report
+	email_to:	'your-email@domain.com', //the e-mail address that will receive the update report
+	sendmail: 	'/usr/sbin/sendmail', //the path to your sendmail binary (you probably don't need to change this)
+
+	// configure the user:group id's for the user that runs the Docker containers here.
+	// Based on best practices with linuxserver.io containers.
+	// These are *always* passed to the container as environment variables,
+	// unless specifically overridden in an individual container configuration
+	PUID : 		1027,
+	PGID : 		100,
+
+	// configure path variables, useful for repetitive configurations,
+	// or for example to create requalized configurations in Servarr containers
+	video : 	'/volume/my-videos',
+	movies : 	'/volume/my-videos/movies',
+	series : 	'/volume/my-videos/series',
+	music : 	'/volume/my-music',
+	downloads : 	'/volume/my-downloads',
+
+	// configure the default network type
+	// (global setting, ignored when set in individiual container configuration)
+	network : 	'host',
+
+	// configure the default restart policy
+	// (global setting, ignored when set in individiual container configuration)
+
+    	restart:	'unless-stopped', //or 'always'
+
+	// configure the default timezone
+	// (global setting, ignored when set in individiual container configuration)
+    	timezone:	'Europe/Amsterdam',
+
+	// configure the default alwaysrun policy
+	// (global setting, ignored when set in individiual container configuration)
+	alwaysrun:	false,
+
+    	// Enable this to prune dead containers after updating *all* (--all)
+    	prune:		true,
+
+    	// set debugging true to show the commands that will be executed, but don't execute them
+    	debug:		false,
+
+	// Set default logging level. 0 = show all, 1 = only warnings & errors, 2 = only errors
+	logLevel:	1, 
+}
+```
 
 Then, enter your container configurations in the `container` object. A basic container entry looks like this:
 
@@ -42,7 +92,7 @@ Then, enter your container configurations in the `container` object. A basic con
         // Volume mappings
         v: [ 
           ['/my-custom/path-1', '/path-1/'],
-          ['/my-custom/path-2', '/another-path/'],
+          options.mypath1,
           //add more if needed
         ],
 
@@ -79,17 +129,14 @@ Then, enter your container configurations in the `container` object. A basic con
 ```
 The above example configuration:
 - Creates a container named `plex`,
-- using the 'plexinc/pms-docker:plexpass' image,
-- maps the `/my-custom/path-1` directory of the host to the `/path-1/` directory in the container, as well as the host's `/my-custom/path-2` to `/another-path/` in the container,
+- using the `plexinc/pms-docker:plexpass` image,
+- maps the `/my-custom/path-1` directory of the host to the `/path-1/` directory in the container,
+- maps a preset path mapping, `mypath1`, as defined in `options`,
 - sets the timezone to `Europe/Amsterdam`, and specifies the `PLEX_UID` and `PLEX_GID` variables to user `1234` and group `56789`,
 - maps all devices inside `/dev/dri` on the host to the same path in the container,
-
-This example creates or updates the container 'plex' using the,
-it maps any and all devices inside /dev/dri to the container's /dev/dri,
-maps the movies and tv-series paths, and another path (added as an example) and explicitly assigns PUID and PGID as
-'PLEX_UID' and 'PLEX_GID' environment variables because the Plex docker container doesn't use the PUID and PGID variables.
-For demonstration purposes, it also sets a specific timezone (ignoring the global setting in 'options'), sets the
-container to run priviliged, assigns a 768mb memory limit, and specifies a 'always' restart policy (ignoring the global setting in 'options').
+- sets the container to run with elevated rights (`privileged`)
+- limits the container's max memory usage to `768` MB (ignoring the global setting in `options`),
+- sets an `always` restart policy (ignoring the global setting in `options`).
 
 ## What it does
 When properly configured, triggering the script for a container (e.g. 'my-container') will:
