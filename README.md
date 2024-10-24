@@ -27,7 +27,7 @@ const options = {
 	base_config:	'/volume/my-docker-configs',
 
 	// configure path variables, useful for repetitive configurations,
-	// or for example to create requalized configurations in Servarr containers
+	// or for example to create unified configurations in Servarr containers
 	video : 	'/volume/my-videos',
 	movies : 	'/volume/my-videos/movies',
 	series : 	'/volume/my-videos/series',
