@@ -144,7 +144,7 @@ const containers = {
 }
 ```
 
-Note: you can basically assign anything you want to the `arguments` array; it will eventually get flattened into a `docker create` command. If the defined key is one character, it will be passed as `-f <values>`, and otherwise as `--foo <values>`.
+Note: you can basically assign anything you want to the `arguments` object; it will eventually get flattened into a `docker create` command. If the defined key is one character, it will be passed as `-f <values>`, and otherwise as `--foo <values>`.
 
 ## Running the script
 
