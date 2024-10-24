@@ -6,7 +6,7 @@ Easy Docker Container Updater is a NodeJS script which offers an extremely simpl
 - A text-editor to configure the script
 
 ## Basic configuration
-First, adjust the `options` object to fit your configuration.
+Open `container-update.js` with a text-editor and first adjust the `options` object to fit your configuration:
 
 ```JavaScript
 const options = {
