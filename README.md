@@ -36,7 +36,7 @@ node container-update.js plex
 Will:
 - Check if a container entry named `plex` exists inside the `containers` object in `container-config.js`,
 - Check if a container named `plex` exists in Docker,
-- Check if a container config path named `/volume/my-docker-configs/plex/config` exists, and if not create it,
+- Check if a container config path for the container exists, and if not create it,
 - Download the `plexinc/pms-docker:plexpass` image,
 - Check if the image is up-to-date or has been updated, and if it is;
 	- Stop and delete the old `plex` container,
