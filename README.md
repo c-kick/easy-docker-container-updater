@@ -1,6 +1,7 @@
 # 🐳 Easy Docker Container Updater
-Easy Docker Container Updater is a NodeJS script which offers an extremely simple way to automate updates to Docker containers, running or not. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and don't want any hassle, and like one-click update solutions. 
-It is particularly useful for those running a large amount of *arr containers. 
+Easy Docker Container Updater is a NodeJS script which offers an extremely simple way to automate updates to Docker containers, running or not. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
+
+It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
 
 ## Requirements:
 - NodeJS (v8.0.0 or higher)
