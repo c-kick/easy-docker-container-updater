@@ -21,7 +21,7 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 	```
 3. Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
 The actual configurations for each container reside in the `container` object.
-   - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command. If the defined key is one character long, it will be passed as `-X <values>`, and otherwise as `--XXXX <values>`.
+   - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
 
 ## Usage examples
 
