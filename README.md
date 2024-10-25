@@ -25,7 +25,7 @@ The actual configurations for each container reside in the `container` object.
 
 ## Usage examples
 
-### Updating containers
+### Update a single container
 
 Running the command
 
@@ -36,7 +36,7 @@ node container-update.js plex
 Will:
 - Check if a container entry named `plex` exists inside the `containers` object in `container-config.js`,
 - Check if a container named `plex` exists in Docker,
-- Check if a container config path for the container exists, and if not create it,
+- Check if a container config path for `plex` exists inside the `configBasePath` path, and if not; create it,
 - Download the `plexinc/pms-docker:plexpass` image,
 - Check if the image is up-to-date or has been updated, and if it is;
 	- Stop and delete the old `plex` container,
@@ -44,6 +44,7 @@ Will:
 	- Start the container if it existed and was already running before the update (or run it if `alwaysRun` is `true`),
 - If the container was actually updated, an e-mail is dispatched with the update summary, 
   if a recipient was entered in `email_to` inside the `options` object.
+- If there is no update for the image, the script does nothing, and if something is wrong, it will output an error.
 
 ### Update all containers
 
