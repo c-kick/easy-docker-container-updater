@@ -1,0 +1,13 @@
+{
+  "name": "easy-docker-container-updater",
+  "version": "2.0.0",
+  "description": "Easy Docker Container Updater is a NodeJS script which offers an extremely simple way to automate updates to Docker containers.",
+  "main": "container-update.js",
+  "scripts": {
+    "start": "node container-update.js",
+    "update": "node container-update.js --all",
+    "config": "cp container-config-example.js container-config.js"
+  },
+  "author": "Klaas Leussink / hnldesign / c_kick",
+  "license": "GNU"
+}
