@@ -235,7 +235,8 @@ function createContainer(containerName, container) {
     if (typeof value == 'boolean') {
       argumentString += `${param} `;
     } else if (typeof value == 'string') {
-      argumentString += `${conditionalQuote(param)}${separator}${conditionalQuote(value)} `;
+      separator =  value.startsWith('=') ? '=' : separator;
+      argumentString += `${conditionalQuote(param)}${separator}${conditionalQuote(value.replace('=', ''))} `;
     } else if (typeof value == 'object') {
       value.map(([key, val]) => {
         argumentString += `${param} ${conditionalQuote(key)}${separator}${conditionalQuote(val)} `;
