@@ -17,14 +17,15 @@ const options = {
   alwaysRun:  false,                // Global alwaysRun value (default: false)
   restart:    'unless-stopped',     // Global restart policy (default: 'unless-stopped')
 
-  email_from: 'from@example.com',   // Sender address for update reports
-  email_to:   'to@example.com',     // Receiver address for update reports
-  sendmail:   '/usr/sbin/sendmail', // Path to sendmail executable, you will likely not need to change this
 
   PUID:       1000,                 // Set to your Docker user's ID
   PGID:       1000,                 // Set to your Docker user's group ID
 
   // ---- REQUIRED settings ----
+  email_from: 'from@example.com',   // Sender address for update reports
+  email_to:   'to@example.com',     // Receiver address for update reports
+  sendmail:   '/usr/sbin/sendmail', // Path to sendmail executable, you will likely not need to change this
+
   configBasePath: '/volume1/docker', // The base path that will be used to look for/store container configs. This path will be appended with '/container-name/config/'
 };
 
