@@ -59,6 +59,9 @@ const containers = {
     // The repository & image to use
     image: 'plexinc/pms-docker:plexpass',
 
+    // Set alwaysRun - if true, this will force the container to run, even when it was stopped prior to updating
+    alwaysRun: false,
+
     // The arguments that will be passed to 'docker create'
     // Note: all these arguments are optional.
     arguments: {
@@ -71,12 +74,12 @@ const containers = {
       ],
 
       // Environment variables
-      e: [
-        ['TZ', 'Europe/Amsterdam'],
-        ['PLEX_UID', 1234],
-        ['PLEX_GID', 56789],
+      e: {
+        TZ: 'Europe/Amsterdam',
+        PLEX_UID: 1234,
+        PLEX_GID: 45678
         //add more if needed
-      ],
+      },
 
       // If you need ports (i.e. in bridge mode)
       // specify them here, as [host-side-port, container-side-port]
@@ -98,13 +101,12 @@ const containers = {
 
       // Restart policy
       restart: 	'always',
+
+      // Set network mode (bridge, host, etc)
+      net: 'host',
+
+      // Add whatever other arguments you need. E.g. stuff like: gpus: 'all'
     },
-
-    // Set network mode (bridge, host, etc)
-    network: 'host',
-
-    // Set alwaysRun - if true, this will force the container to run, even when it was stopped prior to updating
-    alwaysRun: false
 
   },
 

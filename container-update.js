@@ -210,41 +210,23 @@ function removeContainer(containerName, debug = false) {
  * @param {Object} container - The configuration for the container.
  */
 function createContainer(containerName, container) {
-  const {debug: containerDebug, image, arguments, network, configDir} = container;
-  // Construct arguments
-  let argumentString = '';
-  const args = arguments ?? {};
+  const {debug: containerDebug, image, arguments, configDir} = container;
+  // Construct arguments, add missing values if needed
+  const args = {
+    name: containerName,
+    ...arguments,
+    v: [...(arguments?.v ?? []), [conditionalQuote(configDir), '/config']],
+    e: {
+      ...(arguments?.e ?? {}),
+      TZ: arguments?.e?.TZ ?? options.timezone,
+      PGID: arguments?.e?.PGID ?? options.PGID,
+      PUID: arguments?.e?.PUID ?? options.PUID,
+    },
+    net: arguments?.net ?? options.network,
+    restart: arguments?.restart ?? options.restart,
+  };
 
-  if (!args.e) args.e = [];
-  //always set PGID and PUID, if defined in options or container arguments
-  const groupUser = ['PGID', 'PUID'];
-  if (groupUser.some(item => args.e.includes(item) || Object.keys(options).includes(item))) {
-    groupUser.forEach((item) => {
-      const exists = args.e.some(pair => pair[0] === item);
-      if (!exists) {
-        const value = args[item] ?? options[item];
-        args.e.push([item, value]);
-      }
-    });
-  }
-
-  //loop through arguments
-  Object.entries(args).forEach(([key, value]) => {
-    let param = ((key.length === 1) ? '-' : ((key.length > 1) ? '--' : '')) + key;
-    let separator = (['e', 'memory', 'restart'].includes(key)) ? '=' : ':';
-    if (typeof value == 'boolean') {
-      argumentString += `${param} `;
-    } else if (typeof value == 'string') {
-      separator =  value.startsWith('=') ? '=' : separator;
-      argumentString += `${conditionalQuote(param)}${separator}${conditionalQuote(value.replace('=', ''))} `;
-    } else if (typeof value == 'object') {
-      value.map(([key, val]) => {
-        argumentString += `${param} ${conditionalQuote(key)}${separator}${conditionalQuote(val)} `;
-      }).join(' ');
-    }
-  })
-
-  const createCmd = `docker create --name=${containerName} --net=${(network ?? options.network)} ${((args && args.e && args.e.some(pair => pair[0] === 'TZ')) ? '' : `-e TZ=${options.timezone}`)} -v "${configDir}:/config/" ${argumentString.trim()} ${(args && args.restart ? '' : `--restart=${options.restart}`)} ${image}`;
+  const createCmd = `docker create ${flattenDockerArgs(args)} ${image}`;
   _execSync(createCmd.replace(/\s+/g, ' '), {
     debug:   (containerDebug ?? options.debug),
     success: (output) => {
@@ -501,6 +483,42 @@ function _execSync(cmd, args = {}) {
     }
   }
 
+}
+
+/**
+ * Flattens docker arguments object into a string
+ * @param {object} args - The arguments object
+ * @returns {string} - The flattened arguments object
+ */
+
+function flattenDockerArgs(args) {
+  let result = [];
+
+  for (const [key, value] of Object.entries(args)) {
+    const prefix = key.length > 1 ? `--${key}` : `-${key}`;
+
+    if (Array.isArray(value)) {
+      // Handle arrays of pairs, like `-v /src:/dest`
+      value.forEach(item => {
+        if (Array.isArray(item)) {
+          result.push(`${prefix} ${conditionalQuote(item[0])}:${conditionalQuote(item[1])}`);
+        }
+      });
+    } else if (typeof value === 'object' && value !== null) {
+      // Handle environment variables object `-e key=value`
+      for (const [envKey, envValue] of Object.entries(value)) {
+        result.push(`-e ${envKey}=${conditionalQuote(envValue.toString())}`);
+      }
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      // Handle `--key=value` for strings and numbers
+      result.push(`${prefix}=${conditionalQuote(value.toString())}`);
+    } else if (typeof value === 'boolean' && value) {
+      // Handle boolean flags
+      result.push(prefix);
+    }
+  }
+
+  return result.join(' ').trim();
 }
 
 /**
