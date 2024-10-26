@@ -19,6 +19,11 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 	```bash
 	cp container-config-example.js container-config.js
 	```
+	 - Alternativeley, you can run:
+	   ```bash
+	   npm run config
+	   ```
+	   Which will basically do the same.
 3. Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
 The actual configurations for each container reside in the `container` object.
    - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
