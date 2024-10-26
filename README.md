@@ -7,6 +7,19 @@ Easy Docker Container Updater is a NodeJS script which offers an simple way to m
 
 It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
 
+## Table of Contents
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Example container configuration](#example-container-configuration)
+- [Usage](#usage)
+  - [Update a Single Container](#update-a-single-container)
+  - [Update All Containers](#update-all-containers)
+  - [Force Updating a Container](#force-updating-a-container)
+  - [Force Updating a Container with a Different Image](#force-updating-a-container-with-a-different-image)
+  - [Force Update All Containers](#force-update-all-containers)
+- [Command Structure Overview](#command-structure-overview)
+
 ## Requirements:
 - Docker
 - NodeJS (v8.0.0 or higher)
