@@ -114,7 +114,7 @@ The actual configurations for each container reside in the `container` object.
 
 ## Usage
 
-## Command structure overview
+### Command structure overview
 
 ```bash
 node container-update.js <container> <image> <forced>
