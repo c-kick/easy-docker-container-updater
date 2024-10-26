@@ -248,10 +248,10 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
   logger.log(`Container: '${containerName}'`, {override: true});
 
   if (!container) {
-    logger.error(`❌\tError: No configuration found for container '${containerName}'. No soup for you.\n`);
+    logger.error(`Error: No configuration found for container '${containerName}'. No soup for you.\n`);
     return;
   } else if (container.debug) {
-    logger.warn(`\n⚠ Note: Container config has debugging enabled!\nOnly showing commands, not running them.\n`, {override: true});
+    logger.warn(`Note: Container config has debugging enabled!\nOnly showing commands, not running them.\n`, {override: true});
   }
 
   container.configDir = `${options.configBasePath}/${containerName}/config`;
@@ -264,7 +264,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
   // Check if config directory exists, create if not
   if (!fs.existsSync(container.configDir)) {
     fs.mkdirSync(container.configDir, {recursive: true});
-    logger.warn(`⚠ Config directory didn't exist, so was created`, {override: debug});
+    logger.warn(`Config directory didn't exist, so it was created`, {override: debug});
   } else {
     logger.log(`Config directory exists.`, {override: debug});
   }
@@ -402,9 +402,10 @@ function dispatchMailReport(callback = null) {
   const to = options.email_to;
   if (!to) return;
   const sendmailPath = options.sendmail;
+  const currentDate = new Date().toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   const email = `From: ${mimeEncodeHeader('🐳')} Easy Docker Container Updater <${options.email_from}>
 To: ${to}
-Subject: Update report
+Subject: Docker Container Update Report - ${currentDate}
 Content-type: text/html; charset=UTF-8
 
 <pre style=\"font-family:monospace,Consolas;font-size:12px;\">${logCache.join('\n')}</pre>`.trim();
