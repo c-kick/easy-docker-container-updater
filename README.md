@@ -8,23 +8,23 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 - A text-editor to configure the script
 
 ## Installation
-1. Download `container-update.js` and `container-config-example.js` and place them (together) in a directory of your choosing.
-	- Alternativeley, you can clone the repository inside the directory of your choice:
+Clone the repository inside the directory of your choice:
    ```bash
    git clone https://github.com/c-kick/easy-docker-container-updater.git
    cd easy-docker-container-updater
    npm install
+   npm run config
    ```
+Or:
+1. Download `container-update.js` and `container-config-example.js` and place them (together) in a directory of your choosing.
 2. Copy and rename the example configuration file, `container-config-example.js`, to `container-config.js`, i.e:
+
 	```bash
 	cp container-config-example.js container-config.js
 	```
-	 - Alternativeley, you can run:
-	   ```bash
-	   npm run config
-	   ```
-	   Which will basically do the same.
-3. Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
+## Configuration
+
+Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
 The actual configurations for each container reside in the `container` object.
    - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
 
