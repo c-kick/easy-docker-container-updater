@@ -1,7 +1,7 @@
 # 🐳 Easy Docker Container Updater
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D%208.0.0-blue.svg)](https://nodejs.org/)
-[![Docker Compatible](https://img.shields.io/badge/docker-compatible-blue.svg)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/your-username/easy-docker-container-updater/blob/main/LICENSE)
+![NodeJS Version](https://img.shields.io/badge/node->%3D%208.0.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=white&style=plastic)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/your-username/easy-docker-container-updater/blob/main/LICENSE)
 
 ## Table of Contents
 - [Introduction](#introduction)
