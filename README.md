@@ -3,22 +3,24 @@
 [![Docker Compatible](https://img.shields.io/badge/docker-compatible-blue.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/your-username/easy-docker-container-updater/blob/main/LICENSE)
 
-Easy Docker Container Updater is a NodeJS script which offers an simple way to maintain centralized configurations & automate updates to Docker containers. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
-
-It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
-
 ## Table of Contents
+- [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [Example container configuration](#example-container-configuration)
 - [Usage](#usage)
+  - [Command Structure Overview](#command-structure-overview)
   - [Update a Single Container](#update-a-single-container)
   - [Update All Containers](#update-all-containers)
   - [Force Updating a Container](#force-updating-a-container)
   - [Force Updating a Container with a Different Image](#force-updating-a-container-with-a-different-image)
   - [Force Update All Containers](#force-update-all-containers)
-- [Command Structure Overview](#command-structure-overview)
+
+## Introduction
+Easy Docker Container Updater is a NodeJS script that offers a simple way to maintain centralized configurations & automate updates to Docker containers. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
+
+It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
 
 ## Requirements:
 - Docker
@@ -112,6 +114,18 @@ The actual configurations for each container reside in the `container` object.
 
 ## Usage
 
+## Command structure overview
+
+```bash
+node container-update.js <container> <image> <forced>
+```
+
+| Parameter       | Description                                                                                         | Required | Example                           |
+|-----------------|-----------------------------------------------------------------------------------------------------|----------|-----------------------------------|
+| `<container>`   | The name of the container to update. You can also pass `--all` to update all configured containers. | Yes      | `plex`, `--all`                   |
+| `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
+| `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                             |
+
 ### Update a single container
 
 Running the command
@@ -180,15 +194,3 @@ node container-update.js --all true
 ```
 
 Will run a forced update on *all* configured containers.
-
-## Command structure overview
-
-```bash
-node container-update.js <container> <image> <forced>
-```
-
-| Parameter       | Description                                                                                         | Required | Example                           |
-|-----------------|-----------------------------------------------------------------------------------------------------|----------|-----------------------------------|
-| `<container>`   | The name of the container to update. You can also pass `--all` to update all configured containers. | Yes      | `plex`, `--all`                   |
-| `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
-| `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                             |
