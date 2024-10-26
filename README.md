@@ -23,6 +23,68 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 The actual configurations for each container reside in the `container` object.
    - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
 
+### Example container configuration
+
+<details>
+  <summary>Click here for an example container config entry</summary>
+
+  Note: `container-config-example.js` also contains an example configuration.
+
+  ```js
+  'plex': {
+
+    debug: true, //optional - override debug mode for this container
+
+    image: 'plexinc/pms-docker:plexpass', // required - the repository & image to use
+
+    alwaysRun: false, // optional - if true, this will force the container to run, even when it was stopped prior to updating. Note: this is *not* the restart policy, which is configured inside the `arguments` object (below).
+
+    // The arguments that will be passed to 'docker create'
+    // Note: all arguments are optional. If you have no arguments, just leave it empty (`arguments: {}`)
+    arguments: {
+
+      net: 	'bridge', // Network mode (bridge, host, etc)
+
+      // If you need ports (i.e. in 'bridge' network mode)
+      // specify them here, as [host-side-port, container-side-port]
+      p: [
+      	[32400, 32400],
+      ],
+
+      // Volume mappings
+      v: [
+        ['/my-custom/path-1', '/path-1/'],
+        //add more if needed
+      ],
+
+      // Environment variables
+      e: {
+        TZ: 'Europe/Amsterdam',
+        PLEX_UID: 1234,
+        PLEX_GID: 45678
+        //add more if needed
+      },
+
+      // Device mappings
+      device: [
+        ['/dev/dri', '/dev/dri'],
+        //add more if needed
+      ],
+
+      privileged: 	false,	// optional - privileged mode
+
+      memory:		'768m', // optional - memory limit
+     
+      restart: 		'always', // optional - restart policy
+
+      // Add whatever other arguments you need. E.g. stuff like: gpus: 'all'
+    },
+
+  },
+  ```
+Note that optional values will fall back to defaults inside the `options` object (and if not there, to hard-coded defaults), if not specified.
+</details>
+
 ## Usage
 
 ### Update a single container
