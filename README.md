@@ -33,7 +33,7 @@ Running the command
 node container-update.js plex
 ```
 
-Updates the 'plex' container, if there is an update for the image available. 
+Updates the `plex` container, if there is an update available for the image it was created with. 
 
 In more detail, it will:
 - Check if a container entry named `plex` exists inside the `containers` object in `container-config.js`,
