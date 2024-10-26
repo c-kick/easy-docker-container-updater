@@ -1,9 +1,14 @@
 # 🐳 Easy Docker Container Updater
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D%208.0.0-blue.svg)](https://nodejs.org/)
+[![Docker Compatible](https://img.shields.io/badge/docker-compatible-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/your-username/easy-docker-container-updater/blob/main/LICENSE)
+
 Easy Docker Container Updater is a NodeJS script which offers an simple way to maintain centralized configurations & automate updates to Docker containers. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
 
 It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
 
 ## Requirements:
+- Docker
 - NodeJS (v8.0.0 or higher)
 - A text-editor to configure the script
 
@@ -87,7 +92,9 @@ The actual configurations for each container reside in the `container` object.
 
   },
   ```
-Note that optional values will fall back to defaults inside the `options` object (and if not there, to hard-coded defaults), if not specified.
+> **Note:** Optional values will fall back to defaults inside the `options` object (and if not there, to hard-coded defaults), if not specified.
+
+> **Note:** If you have many containers configured, but want to debug just one of them, you can override the global `debug` flag from *inside* a container config. Just set `debug : true` in the container's config entry (as shown in the example).
 </details>
 
 ## Usage
@@ -113,6 +120,8 @@ In more detail, it will:
 - If the container was actually updated, an e-mail is dispatched with the update summary, 
   if a recipient was entered in `email_to` inside the `options` object.
 - If there is no update for the image, the script does nothing, and if something is wrong, it will output an error.
+
+> **Note:** If you don't want any e-mail reports, blank out the `email_to` option (or set it to `null`) in  the `options` in `container-config.js`.
 
 ### Update *all* containers
 
@@ -165,13 +174,8 @@ Will run a forced update on *all* configured containers.
 node container-update.js <container> <image> <forced>
 ```
 
-Breakdown:
-- `./container-update.js` - The (path to) the Easy Docker Container Updater script
-- `<container>` - The name of the container to update.
-  - You can also pass `--all` here, to update *all* configured containers.
-- `<image>` - (optional) The name of the repository:image to use. Use this to override the `image` configured for this container in the `containers` object in `container-config.js`.
-- `<forced>` - (optional) Set `true` if you want to force-update a container, even when its image has no available update.
-
-### Notes
-- If you don't want any e-mail reports, blank out the `email_to` option (or set it to `null`) in  the `options` in `container-config.js`.
-- If you have many containers configured, but want to debug just one of them, you can override the global `debug` flag from *inside* a container config. Just set `debug : true` in the container's config entry.
+| Parameter       | Description                                                                                         | Required | Example                           |
+|-----------------|-----------------------------------------------------------------------------------------------------|----------|-----------------------------------|
+| `<container>`   | The name of the container to update. You can also pass `--all` to update all configured containers. | Yes      | `plex`, `--all`                   |
+| `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
+| `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                             |
