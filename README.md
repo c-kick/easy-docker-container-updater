@@ -23,7 +23,7 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 The actual configurations for each container reside in the `container` object.
    - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
 
-## Usage examples
+## Usage
 
 ### Update a single container
 
@@ -33,12 +33,12 @@ Running the command
 node container-update.js plex
 ```
 
-Updates the `plex` container, if there is an update available for the image it was created with. 
+Updates the `plex` container, if there is an update available for the image configured for it. 
 
 In more detail, it will:
 - Check if a container entry named `plex` exists inside the `containers` object in `container-config.js`,
 - Check if a container config path for `plex` exists inside the `configBasePath` path, and if not; create it,
-- Download the `plexinc/pms-docker:plexpass` image,
+- Download the (let's assume this is the configured image) `plexinc/pms-docker:plexpass` image,
 - Check if the image is up-to-date or has been updated, and if it is;
 	- Check if a container named `plex` exists in Docker, and if it does; stop and delete the old container,
 	- (Re)create a `plex` container based on the config defined for `plex` inside the `containers` object in `container-config.js`,
@@ -47,7 +47,7 @@ In more detail, it will:
   if a recipient was entered in `email_to` inside the `options` object.
 - If there is no update for the image, the script does nothing, and if something is wrong, it will output an error.
 
-### Update all containers
+### Update *all* containers
 
 Running the command
 
@@ -81,6 +81,16 @@ node container-update.js plex plexinc/pms-docker:public
 ```
 
 This will run the `plex` container update process, using the `plexinc/pms-docker:public` image, regardless of an actual image update.
+
+### Force update *all* containers
+
+You probably only ever want to do this, but if you do, running the command:
+
+```bash
+node container-update.js --all true
+```
+
+Will run a forced update on *all* configured containers.
 
 ## Command structure overview
 
