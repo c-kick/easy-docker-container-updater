@@ -134,12 +134,12 @@ try {
 
 const options = {
   ...{
+    debug:     false,
+    logLevel:  1,
     network:   'host',
     timezone:  'Europe/Amsterdam',
     alwaysRun: false,
     prune:     true,
-    debug:     false,
-    logLevel:  1,
     restart:   'unless-stopped',
   }, ...importedOptions
 };

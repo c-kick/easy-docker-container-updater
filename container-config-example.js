@@ -7,19 +7,20 @@ Make sure you remove '-example' from this file when you're done!
 
 */
 const options = {
-  // ---- OPTIONAL settings ----
+  // ---- OPTIONAL global defaults ----
   debug:      false,                // Global debug flag (default: false)
-  logLevel:   1,                    // Logging level. 0 = show all, 1 = only warnings & errors, 2 = only errors
+  logLevel:   1,                    // Logging level. 0 = show all, 1 = only warnings & errors, 2 = only errors (default: 1)
 
-  network:    'host',               // Global network type for containers (default: host)
-  prune:      true,                 // Global setting for removing unused containers after updating (default: true)
+  network:    'host',               // Global network type for containers (default: 'host')
   timezone:   'Europe/Amsterdam',   // Global timezone (default: 'Europe/Amsterdam')
   alwaysRun:  false,                // Global alwaysRun value (default: false)
+  prune:      true,                 // Global setting for removing unused containers after updating (default: true)
   restart:    'unless-stopped',     // Global restart policy (default: 'unless-stopped')
-
 
   PUID:       1000,                 // Set to your Docker user's ID
   PGID:       1000,                 // Set to your Docker user's group ID
+  // If specified, and not overwritten in a container config, these will always be set in the container create command.
+  // To read more about why this is, head over to https://docs.linuxserver.io/general/understanding-puid-and-pgid/
 
   // ---- REQUIRED settings ----
   email_from: 'from@example.com',   // Sender address for update reports
@@ -32,11 +33,10 @@ const options = {
 // Optional object to store your paths, to centralize container management.
 const paths = {
   downloads: '/path/to/downloads',  // Directory for downloads
-  video:     '/path/to/video',          // Video directory
+  video:     '/path/to/video',      // Video directory
 
   // Add other directories as needed...
 };
-
 
 // Optional intermediate object to make configurations more uniform and easier to maintain.
 // For example when creating consistent *arr container configurations (https://wiki.servarr.com/)
@@ -67,10 +67,17 @@ const containers = {
     // Note: all these arguments are optional.
     arguments: {
 
+      net: 	'bridge', // Network mode (bridge, host, etc)
+
+      // If you need ports (i.e. in 'bridge' network mode)
+      // specify them here, as [host-side-port, container-side-port]
+      p: [
+        [32400, 32400],
+      ],
+
       // Volume mappings
       v: [
         ['/my-custom/path-1', '/path-1/'],
-        servarr_options.downloads
         //add more if needed
       ],
 
@@ -82,29 +89,17 @@ const containers = {
         //add more if needed
       },
 
-      // If you need ports (i.e. in bridge mode)
-      // specify them here, as [host-side-port, container-side-port]
-      // p: [
-      //   	[8000, 80],
-      // ],
-
       // Device mappings
       device: [
         ['/dev/dri', '/dev/dri'],
         //add more if needed
       ],
 
-      // Privileged mode
-      privileged: 	true,
+      privileged: 	false,	// optional - privileged mode
 
-      // Memory limit
-      memory:    	'768m',
+      memory:		'768m', // optional - memory limit
 
-      // Restart policy
-      restart: 	'always',
-
-      // Set network mode (bridge, host, etc)
-      net: 'host',
+      restart: 		'always', // optional - restart policy
 
       // Add whatever other arguments you need. E.g. stuff like: gpus: 'all'
     },

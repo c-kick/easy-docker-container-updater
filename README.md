@@ -16,7 +16,7 @@ It is particularly useful for those running a large amount of [*arr](https://wik
    npm install
    ```
 2. Copy and rename the example configuration file, `container-config-example.js`, to `container-config.js`, i.e:
-	```
+	```bash
 	cp container-config-example.js container-config.js
 	```
 3. Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
