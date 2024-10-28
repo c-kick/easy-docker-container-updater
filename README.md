@@ -6,11 +6,17 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+  - [Features](#features)
+  - [Example Usage](#example-usage)
+  - [Why not just use Docker Compose or Watchtower](#why-not-just-use-docker-compose-or-watchtower)
 - [Requirements](#requirements)
 - [Installation](#installation)
+  - [Using Git](#using-git)
+  - [Manually](#manually) 
 - [Configuration](#configuration)
   - [Example container configuration](#example-container-configuration)
 - [Usage](#usage)
+  - [Quick Start](#quick-start)
   - [Command Structure Overview](#command-structure-overview)
   - [Update a Single Container](#update-a-single-container)
   - [Update All Containers](#update-all-containers)
@@ -21,14 +27,14 @@
 
 ## Introduction
 
-Easy Docker Container Updater is a Node.js script designed to provide a simple, straightforward way to manage Docker container configurations and automate container updates. This tool is perfect for users with limited Docker experience who run containers on their private NAS or home servers and want a lightweight "fire-and-forget" solution for updating their containers.
+Easy Docker Container Updater is a Node.js script I originally wrote to streamline the update process for my containers when I was just starting out with Docker. Years later, it’s still reliably handling my container updates, so I decided to publish it as open-source. This tool is designed for users who want a simple way to manage and update Docker containers—particularly on private NAS or home servers. It’s perfect for those with limited Docker experience or anyone looking for a lightweight, “fire-and-forget” solution without diving into the complexities of Docker Compose or Watchtower.
 
-### Benefits
-- **Easy Setup**: Get started quickly with a simple Node.js script, no additional container or software needed.
-- **Centralized configurations**: All your container configurations are stored in one place.
+### Features
+- **Centralized Configuration**: Manage all container settings in a single file.
 - **Flexibility**: Define variables (e.g., paths) once and reuse them across multiple containers for uniform configuration, which makes it particularly useful for use with [*arr](https://wiki.servarr.com) containers.
-- **Automated Updates**: Schedule this script to update all your containers at once, and get a full e-mail report after it's done.
-- **Lightweight Solution**: Perfect for home servers and small projects where orchestration tools (e.g., Kubernetes) would be overkill.
+- **Lightweight and Easy to Use**: Set up with a single script—no additional containers or advanced tools needed.
+- **Automated Updates and Email Reports**: Update all your containers with one command, with optional email notifications.
+- **Ideal for NAS/Home Server Users**: Designed to be simple yet powerful for small-scale setups
 
 ### Example Usage
 To update all your containers in succession:
@@ -42,9 +48,9 @@ To update a specific container:
 
 ### Why not just use Docker Compose or Watchtower?
 
-Easy Docker Container Updater doesn’t claim to offer new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+By all means: if you use them; great! This script is not for you. Easy Docker Container Updater offer any new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 
-While Docker Compose is powerful for managing multi-container applications, and Watchtower provides fully hands-off updates, both require a certain familiarity with Docker’s ecosystem and configuration management. For users who just want a straightforward way to manage and update their containers without learning new tools or configurations, Easy Docker Container Updater offers a practical alternative.
+While Docker Compose and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
 This script is intentionally simplified: it centralizes all container configurations, makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
 
@@ -62,23 +68,24 @@ If you have Git installed, you can clone the repository inside the directory of 
    npm install
    npm run config
    ```
-### Manual
+### Manually
 1. Download `container-update.js` and `container-config-example.js` and place them (together) in a directory of your choosing.
 2. Copy and rename the example configuration file, `container-config-example.js`, to `container-config.js`, i.e:
 
-	```bash
-	cp container-config-example.js container-config.js
-	```
+   ```bash
+   cp container-config-example.js container-config.js
+   ```
+
 ## Configuration
 
-Open `container-config.js` with a text-editor and first adjust the `options` object to fit your configuration. The file is annotated, so should be self-explanatory.
-The actual configurations for each container reside in the `container` object.
-   - Note: you can basically assign anything you want to the `arguments` object inside each container configuration entry; it will eventually get flattened into a `docker create` command.
+### Configuration
+Open `container-config.js` in a text editor and adjust the `options` object to fit your setup. Each container you wish to update is defined in the `containers` object, where you can specify container images, arguments, network modes, and more. Here’s a sample entry:
 
-### Example container configuration
 
 <details>
   <summary>Click here for an example container config entry</summary>
+	
+  ### Example Container Configuration
 
   Note: `container-config-example.js` also contains an example configuration.
 
@@ -141,7 +148,14 @@ The actual configurations for each container reside in the `container` object.
 
 ## Usage
 
-### Command structure overview
+### Quick Start
+Run the script with the following commands to update containers:
+
+- **Update a Single Container**: `node container-update.js <container_name>`
+- **Update All Containers**: `node container-update.js --all`
+
+### Command Structure Overview
+Here are the main parameters you can use with `container-update.js`:
 
 ```bash
 node container-update.js <container> <image> <forced>
@@ -153,7 +167,7 @@ node container-update.js <container> <image> <forced>
 | `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
 | `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                             |
 
-### Update a single container
+### Update A Single Container
 
 Running the command
 
