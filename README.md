@@ -186,7 +186,7 @@ To force an update using a different image, run:
 node container-update.js plex plexinc/pms-docker:public
 ```
 
-This will run the `plex` container update process, using the `plexinc/pms-docker:public` image, regardless of an actual image update.
+This will run the `plex` container update process, using the `plexinc/pms-docker:public` image, regardless of an actual image update, while retaining the configuration you defined. Useful if you just want to quickly try out another image version. 
 
 ### Force update *all* containers
 
