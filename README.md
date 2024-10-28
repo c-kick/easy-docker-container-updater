@@ -30,6 +30,7 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 - A text-editor to configure the script
 
 ## Installation
+### Using Git
 If you have Git installed, you can clone the repository inside the directory of your choice:
    ```bash
    git clone https://github.com/c-kick/easy-docker-container-updater.git
@@ -37,7 +38,7 @@ If you have Git installed, you can clone the repository inside the directory of 
    npm install
    npm run config
    ```
-Or:
+### Manual
 1. Download `container-update.js` and `container-config-example.js` and place them (together) in a directory of your choosing.
 2. Copy and rename the example configuration file, `container-config-example.js`, to `container-config.js`, i.e:
 
