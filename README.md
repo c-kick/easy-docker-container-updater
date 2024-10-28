@@ -1,8 +1,8 @@
 # 🐳 Easy Docker Container Updater
-![NodeJS Version](https://img.shields.io/badge/node->%3D%208.0.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=white&style=plastic)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
-[![License](https://img.shields.io/badge/license-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
-![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?labelColor=4384F5&style=for-the-badge&logo=synology&logoColor=white&style=plastic)
+[![NodeJS Version](https://img.shields.io/badge/Node.js->%3D%208.0.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=98F483&style=plastic)](#requirements)
+![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
+[![License](https://img.shields.io/badge/License-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
+![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?style=for-the-badge&labelColor=4384F5&style=for-the-badge&logo=synology&logoColor=white&style=plastic)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -17,6 +17,7 @@
   - [Force Updating a Container](#force-updating-a-container)
   - [Force Updating a Container with a Different Image](#force-updating-a-container-with-a-different-image)
   - [Force Update All Containers](#force-update-all-containers)
+  - [Optional: stay up to date](#optional-stay-up-to-date)
 
 ## Introduction
 Easy Docker Container Updater is a NodeJS script that offers a simple way to maintain centralized configurations & automate updates to Docker containers. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
@@ -195,3 +196,10 @@ node container-update.js --all true
 ```
 
 Will run a forced update on *all* configured containers.
+
+### Optional: stay up to date
+If you have pulled the script via Git, and want to make sure you have the latest version of the updater each time you run it, you can call:
+
+```bash
+cd /your/path/to/easy-docker-container-updater && git pull && node ./container-update.js --all
+```
