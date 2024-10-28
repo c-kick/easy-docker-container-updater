@@ -11,13 +11,11 @@ let containers = {};
 
 const {execSync, spawn} = require('child_process');
 const fs = require('fs');
-const logCache = [];
 
 /**
  * Logger utility for colorized, leveled, and conditionally stored console messages.
  * Provides methods for logging (`log`, `info`, `warn`, `error`) at different levels
- * with optional color and configuration settings. Messages are stored in `logCache`,
- * so this needs to be defined outside the logger.
+ * with optional color and configuration settings.
  *
  * Usage:
  * logger.log('My message', {override: true, color: 'cyan'});
@@ -32,11 +30,13 @@ const logCache = [];
  * @property {Function} info - Logs an informational message at level 0.
  * @property {Function} warn - Logs a warning message at level 1.
  * @property {Function} error - Logs an error message at level 2.
+ * @property {Function} sendLog - Sends all the collected logs up to this point to a configured email-address.
  *
  * @param {string} msg - The message to log.
  * @param {LoggerOptions} [options={}] - Optional settings for color, override, and debug level.
  */
 const logger = {
+  logCache: [],
   colors: {
     reset: "\x1b[0m",
     // Standard and Bright Colors
@@ -53,7 +53,15 @@ const logger = {
 
     // 256-Color Approximations
     orange:    "\x1b[38;5;214m", pink: "\x1b[38;5;205m", lightGreen: "\x1b[38;5;120m",
-    lightBlue: "\x1b[38;5;81m", purple: "\x1b[38;5;135m"
+    lightBlue: "\x1b[38;5;81m", purple: "\x1b[38;5;135m",
+
+    // HTML-safe colors
+    htmlColors: {
+      white: "#FFFFFF", black: "#000000", red: "#d50d0d", green: "#00b200", yellow: "#FFFF00",
+      blue: "#0f3abb", magenta: "#b215b2", cyan: "#00b0c0", brightYellow: "#d98000",
+      orange: "#FFA500", pink: "#FFC0CB", lightGreen: "#67b767", lightBlue: "#7ba5b0",
+      purple: "#800080"
+    },
   },
   // Mapping 256-color names to basic colors for fallbacks
   colorFallbacks: {
@@ -76,46 +84,121 @@ const logger = {
    * Applies color to the provided text based on the selected color and terminal support.
    * @param {string} text - The text to colorize.
    * @param {string} [color='white'] - The color to apply.
-   * @returns {string} - The colorized text with ANSI codes.
+   * @returns {object} - The colorized text with ANSI codes.
    */
   colorize(text, color = 'white') {
     const use256 = this.supports256Colors();
-    const chosenColor = this.colors[color] || (use256 ? this.colors[color] : this.colors[this.colorFallbacks[color]]) || this.colors.white;
-    return `${chosenColor}${text}${this.colors.reset}`;
+    const ansiColor = this.colors[color] || (use256 ? this.colors[color] : this.colors[this.colorFallbacks[color]]) || this.colors.white;
+
+    // Only set HTML color if it's not white or black
+    const htmlColor = (color !== 'white' && color !== 'black') ? this.colors.htmlColors[color] || "#000000" : null;
+
+    // Return both ANSI for console and styled HTML for logCache
+    return {
+      ansi: `${ansiColor}${text}${this.colors.reset}`,
+      html: htmlColor ? `<span style="color:${htmlColor}">${text}</span>` : text
+    };
   },
   /**
    * Logs a message at the specified level with optional color and debug options.
    * @param {string} msg - The message to log.
    * @param {number} [level=0] - The log level (0: log, 1: warn, 2: error).
-   * @param {Object} [options={}] - Options for color, override, and log level.
-   * @param {string} [options.color='white'] - The color to apply to the message.
-   * @param {boolean} [options.override=false] - If true, forces logging regardless of level.
-   * @param {number} [options.logLevel=0] - Minimum log level required to output the message.
+   * @param {Object} [logOptions={}] - Options for color, override, and log level.
+   * @param {string} [logOptions.color='white'] - The color to apply to the message.
+   * @param {boolean} [logOptions.override=false] - If true, forces logging regardless of level.
+   * @param {number} [logOptions.logLevel=0] - Minimum log level required to output the message.
+   * Log levels: 0 is considered the lowest level, and equals al '.log' calls. .info is 1, .warn is 2 and .error is 3.
    */
-  logWithLevel: function (msg, level, options = {}) {
-    const {color, override = false, logLevel = 0} = options;
-
+  logWithLevel: function (msg, level, logOptions = {}) {
     // Check log level and only log if allowed
-    if (logLevel <= level || override) {
-      // Check for 256-color support and apply fallback if necessary
-      logCache.push(msg);
+    if (level >= (logOptions.logLevel ?? options.logLevel) || logOptions.override) {
+      const colorized = this.colorize(msg, logOptions.color);
+      this.logCache.push(colorized.html);
 
-      // Choose the console method based on log level
-      const consoleMethod = level === 2 ? console.error : level === 1 ? console.warn : console.log;
-      consoleMethod(this.colorize(msg, color));
+      // Select the console method
+      const consoleMethod = level === 3 ? console.error : level === 2 ? console.warn : level === 1 ? console.info : console.log;
+      consoleMethod(colorized.ansi);
     }
   },
   log(msg, options = {}) {
     this.logWithLevel(msg, 0, options);
   },
   info(msg, options = {}) {
-    this.logWithLevel(msg, 0, options);
+    this.logWithLevel(msg, 1, options);
   },
   warn(msg, options = {}) {
-    this.logWithLevel(msg, 1, {...options, color: 'orange'});
+    this.logWithLevel(msg, 2, {...options, color: 'orange'});
   },
   error(msg, options = {}) {
-    this.logWithLevel(msg, 2, {...options, color: 'red'});
+    this.logWithLevel(msg, 3, {...options, color: 'red'});
+  },
+  /**
+   * Dispatches an email report summarizing the update process.
+   * @param {Function} [callback=null] - Optional callback function to handle email send status.
+   */
+  sendLog(callback = null) {
+    const to = options.email_to;
+    if (!to) return;
+    const sendmailPath = options.sendmail;
+    const currentDate = new Date().toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+    const subject = `Docker Container Update Report - ${currentDate}`;
+
+    // Generate plain text version of the log for spam reduction
+    const plainTextLog = this.logCache.map(entry => entry.replace(/<[^>]*>/g, '')).join('\n');
+    const htmlLog = `<pre style="font-family:system-ui,sans-serif;font-size:14px;">${this.logCache.join('\n')}</pre>`.trim();
+
+    const email = `From: ${mimeEncodeHeader('🐳')} Easy Docker Container Updater <${options.email_from}>
+To: ${to}
+Reply-to: ${options.email_from}
+Subject: ${subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="boundary-string"
+Content-Transfer-Encoding: 7bit
+
+--boundary-string
+Content-Type: text/plain; charset=UTF-8
+
+${subject}
+${plainTextLog}
+
+--boundary-string
+Content-Type: text/html; charset=UTF-8
+
+${subject}
+${htmlLog}
+
+--boundary-string--`.trim();
+
+    if (options.debug) {
+      logger.log(`> Email report:`, {color: 'orange'});
+      logger.log(to, {color: 'cyan'});
+      logger.log(sendmailPath, {color: 'yellow'});
+      logger.log(email);
+    } else {
+      // Spawn the sendmail process
+      const sendmail = spawn(sendmailPath, ['-t']);
+
+      // Write the email body to sendmail's stdin
+      sendmail.stdin.write(email);
+      sendmail.stdin.end();
+
+      // Handle the output or error
+      sendmail.on('close', (code) => {
+        if (typeof callback === 'function') {
+          callback(code);
+        } else {
+          if (code === 0) {
+            console.log('Email sent successfully.');
+          } else {
+            console.error(`Sendmail process exited with code ${code}`);
+          }
+        }
+      });
+
+      sendmail.on('error', (error) => {
+        console.error(`Failed to send email: ${error.message}`);
+      });
+    }
   }
 }
 
@@ -188,7 +271,7 @@ function isContainerRunning(containerName) {
 function stopContainer(containerName, debug = false) {
   _execSync(`docker stop ${containerName}`, {
     debug,
-    success: () => logger.log(`Container stopped.`)
+    success: () => logger.info(`Container stopped.`)
   });
 }
 
@@ -200,7 +283,7 @@ function stopContainer(containerName, debug = false) {
 function removeContainer(containerName, debug = false) {
   _execSync(`docker rm ${containerName}`, {
     debug,
-    success: () => logger.log(`Container removed.`)
+    success: () => logger.info(`Container removed.`)
   });
 }
 
@@ -230,7 +313,7 @@ function createContainer(containerName, container) {
   _execSync(createCmd.replace(/\s+/g, ' '), {
     debug:   (containerDebug ?? options.debug),
     success: (output) => {
-      logger.log(`Container created.`, {override: true});
+      logger.info(`Container created.`, {override: true});
     }
   });
 }
@@ -266,7 +349,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
     fs.mkdirSync(container.configDir, {recursive: true});
     logger.warn(`Config directory didn't exist, so it was created`, {override: debug});
   } else {
-    logger.log(`Config directory exists.`, {override: debug});
+    logger.info(`Config directory exists.`, {override: debug});
   }
 
   if (!container.image.toLowerCase().includes(containerName.toLowerCase())) {
@@ -279,7 +362,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
     const pullResult = _execSync(`docker pull ${container.image}`, {debug}).toString();
     const hasUpdate = !pullResult.includes('up to date');
     const updateMsg = `${hasUpdate ? '' : 'No '}update available${(hasUpdate) ? '!' : '.'}`;
-    logger.log(`${updateMsg.charAt(0).toUpperCase() + updateMsg.slice(1)}`, {override: true});
+    logger.info(`${updateMsg.charAt(0).toUpperCase() + updateMsg.slice(1)}`, {override: true});
 
     if (hasUpdate || forcedUpdate || !exists || forcedImage) {
       if (forcedUpdate) {
@@ -289,9 +372,9 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
 
       if (exists) {
         if (wasRunning) {
-          logger.log(`Container running, so start after update.`, {override: debug});
+          logger.info(`Container running, so start after update.`, {override: debug});
         } else {
-          logger.log(`Container not running. ${(container.alwaysRun ?? options.alwaysRun) ? `Will start after update.` : ''}`, {override: debug});
+          logger.info(`Container not running. ${(container.alwaysRun ?? options.alwaysRun) ? `Will start after update.` : ''}`, {override: debug});
         }
       }
 
@@ -316,7 +399,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
       if ((container.alwaysRun ?? options.alwaysRun) || wasRunning) {
         _execSync(`docker start ${containerName}`, {
           debug, success: (output) => {
-            logger.log(`Container started.`);
+            logger.info(`Container started.`);
           }
         });
       }
@@ -364,10 +447,10 @@ async function updateAllContainers(forced = false) {
     }
 
     if (options.prune && updateResults.success) {
-      logger.log("\nContainers updated, now pruning...", {override: true});
+      logger.info("\nContainers updated, now pruning...", {override: true});
       _execSync(`docker image prune -a`, {
         success: (output) => {
-          logger.log(`Pruning done!\n`, {override: true});
+          logger.info(`Pruning done!\n`, {override: true});
         }
       });
     }
@@ -395,54 +478,6 @@ function mimeEncodeHeader(text) {
 }
 
 /**
- * Dispatches an email report summarizing the update process.
- * @param {Function} [callback=null] - Optional callback function to handle email send status.
- */
-function dispatchMailReport(callback = null) {
-  const to = options.email_to;
-  if (!to) return;
-  const sendmailPath = options.sendmail;
-  const currentDate = new Date().toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
-  const email = `From: ${mimeEncodeHeader('🐳')} Easy Docker Container Updater <${options.email_from}>
-To: ${to}
-Subject: Docker Container Update Report - ${currentDate}
-Content-type: text/html; charset=UTF-8
-
-<pre style=\"font-family:monospace,Consolas;font-size:12px;\">${logCache.join('\n')}</pre>`.trim();
-
-  if (options.debug) {
-    logger.log(`> Email report:`, {color: 'orange'});
-    logger.log(to, {color: 'cyan'});
-    logger.log(sendmailPath, {color: 'yellow'});
-    logger.log(email);
-  } else {
-    // Spawn the sendmail process
-    const sendmail = spawn(sendmailPath, ['-t']);
-
-    // Write the email body to sendmail's stdin
-    sendmail.stdin.write(email);
-    sendmail.stdin.end();
-
-    // Handle the output or error
-    sendmail.on('close', (code) => {
-      if (typeof callback === 'function') {
-        callback(code);
-      } else {
-        if (code === 0) {
-          console.log('Email sent successfully.');
-        } else {
-          console.error(`Sendmail process exited with code ${code}`);
-        }
-      }
-    });
-
-    sendmail.on('error', (error) => {
-      console.error(`Failed to send email: ${error.message}`);
-    });
-  }
-}
-
-/**
  * Executes a shell command with additional success and failure handling.
  * @param {string} cmd - The command to execute.
  * @param {Object} [args={}] - Optional arguments for callbacks and debugging.
@@ -460,7 +495,7 @@ function _execSync(cmd, args = {}) {
   if (options.debug || args.debug) {
     // Log the command for debugging purposes if debug is enabled
     const regex = /(\s+)(?=-)/g;
-    logger.info(`> "${cmd.replace(regex, '\n    ').trim()}"`, {override: true, color: 'orange'});
+    logger.info(`$ "${cmd.replace(regex, '\n    ').trim()}"`, {override: true, color: 'orange'});
     //fake success
     if (typeof success === 'function') {
       success();
@@ -537,8 +572,7 @@ const containerToUpdate = process.argv[2];
 const forceUpdate = (process.argv[3] === 'true' || process.argv[4] === 'true');
 const forceImage = process.argv[3] !== ('true' || 'false') ? process.argv[3] : '';
 
-logger.log('\n————————————————————————————————————', {override: true});
-logger.log('🐳 Easy Docker Container Updater 2.0', {override: true, color: 'cyan'});
+logger.log('\n🐳 Easy Docker Container Updater 2.0', {override: true, color: 'cyan'});
 logger.log('     © 2018-2024 Klaas Leussink     ', {override: true});
 logger.log('————————————————————————————————————\n', {override: true});
 
@@ -550,7 +584,7 @@ if (!containerToUpdate) {
 
 if (containerToUpdate === '--all') {
   updateAllContainers(forceUpdate).then(() => {
-    dispatchMailReport((code) => {
+    logger.sendLog((code) => {
       if (!code) {
         logger.log(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
         process.exit(0);
@@ -566,7 +600,7 @@ if (containerToUpdate === '--all') {
 } else {
   if (updateContainer(containerToUpdate, forceImage, forceUpdate) === 1) {
     //was updated
-    dispatchMailReport((code) => {
+    logger.sendLog((code) => {
       if (!code) {
         logger.log(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
         process.exit(0);

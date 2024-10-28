@@ -9,7 +9,7 @@ Make sure you remove '-example' from this file when you're done!
 const options = {
   // ---- OPTIONAL global defaults ----
   debug:      false,                // Global debug flag (default: false)
-  logLevel:   1,                    // Logging level. 0 = show all, 1 = only warnings & errors, 2 = only errors (default: 1)
+  logLevel:   1,                    // Logging level. 0 = show all, 1 = only info, warnings & errors, 2 = only warnings & errors, 3 = only errors (default: 1)
 
   network:    'host',               // Global network type for containers (default: 'host')
   timezone:   'Europe/Amsterdam',   // Global timezone (default: 'Europe/Amsterdam')
