@@ -46,11 +46,11 @@ To update a specific container:
 ./container-update.js <container_name>
 ```
 
-### Why not just use Docker Compose or Watchtower?
+### Why not just use Docker Compose or even Portainer / Watchtower?
 
-By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that those management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 
-While Docker Compose and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
+While Portainer and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
 This script is intentionally simplified: it centralizes all container configurations, makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
 
