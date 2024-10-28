@@ -1,7 +1,8 @@
 # 🐳 Easy Docker Container Updater
 ![NodeJS Version](https://img.shields.io/badge/node->%3D%208.0.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=white&style=plastic)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
-[![License](https://img.shields.io/badge/license-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)]([https://github.com/your-username/easy-docker-container-updater/blob/main/LICENSE](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE))
+[![License](https://img.shields.io/badge/license-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
+![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?labelColor=4384F5&style=for-the-badge&logo=synology&logoColor=white&style=plastic)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -28,7 +29,7 @@ It is particularly useful for those running a large amount of [*arr](https://wik
 - A text-editor to configure the script
 
 ## Installation
-Clone the repository inside the directory of your choice:
+If you have Git installed, you can clone the repository inside the directory of your choice:
    ```bash
    git clone https://github.com/c-kick/easy-docker-container-updater.git
    cd easy-docker-container-updater
