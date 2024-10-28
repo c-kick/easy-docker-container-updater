@@ -52,7 +52,7 @@ By all means, if you use them; great! Then this script is not for you. Easy Dock
 
 While Portainer and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
-This script is intentionally simplified: it centralizes all container configurations, makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
+This script is intentionally simplified: it centralizes all container configurations (or, at least those you want to manage with the script), makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
 
 ## Requirements:
 - Docker
