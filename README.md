@@ -8,7 +8,7 @@
 - [Introduction](#introduction)
   - [Features](#features)
   - [Example Usage](#example-usage)
-  - [Why not just use Docker Compose or evem Portainer / Watchtower](#why-not-just-use-docker-compose-or-even-portainer--watchtower)
+  - [Why not just use Docker Compose or evem Portainer / Watchtower?](#why-not-just-use-docker-compose-or-even-portainer--watchtower)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Using Git](#using-git)
