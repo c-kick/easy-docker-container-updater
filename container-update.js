@@ -271,7 +271,7 @@ function isContainerRunning(containerName) {
 function stopContainer(containerName, debug = false) {
   _execSync(`docker stop ${containerName}`, {
     debug,
-    success: () => logger.info(`Container stopped.`)
+    success: () => logger.log(`Container stopped.`)
   });
 }
 
@@ -283,7 +283,7 @@ function stopContainer(containerName, debug = false) {
 function removeContainer(containerName, debug = false) {
   _execSync(`docker rm ${containerName}`, {
     debug,
-    success: () => logger.info(`Container removed.`)
+    success: () => logger.log(`Container removed.`)
   });
 }
 
@@ -313,7 +313,7 @@ function createContainer(containerName, container) {
   _execSync(createCmd.replace(/\s+/g, ' '), {
     debug:   (containerDebug ?? options.debug),
     success: (output) => {
-      logger.info(`Container created.`, {override: true});
+      logger.log(`Container created.`, {override: true});
     }
   });
 }
@@ -328,7 +328,7 @@ function createContainer(containerName, container) {
 function updateContainer(containerName, forcedImage, forcedUpdate = false) {
 
   const container = containers[containerName];
-  logger.log(`Container: '${containerName}'`, {override: true});
+  logger.info(`Container: '${containerName}'`, {override: true});
 
   if (!container) {
     logger.error(`Error: No configuration found for container '${containerName}'. No soup for you.\n`);
@@ -349,7 +349,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
     fs.mkdirSync(container.configDir, {recursive: true});
     logger.warn(`Config directory didn't exist, so it was created`, {override: debug});
   } else {
-    logger.info(`Config directory exists.`, {override: debug});
+    logger.log(`Config directory exists.`, {override: debug});
   }
 
   if (!container.image.toLowerCase().includes(containerName.toLowerCase())) {
@@ -372,9 +372,9 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
 
       if (exists) {
         if (wasRunning) {
-          logger.info(`Container running, so start after update.`, {override: debug});
+          logger.log(`Container running, so start after update.`, {override: debug});
         } else {
-          logger.info(`Container not running. ${(container.alwaysRun ?? options.alwaysRun) ? `Will start after update.` : ''}`, {override: debug});
+          logger.log(`Container not running. ${(container.alwaysRun ?? options.alwaysRun) ? `Will start after update.` : ''}`, {override: debug});
         }
       }
 
@@ -403,11 +403,11 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
           }
         });
       }
-      logger.log(`Container '${containerName}' was updated!`, {override: true, color: 'lightGreen'});
-      logger.log('————————————————————————————————————\n', {override: true});
+      logger.info(`Container '${containerName}' was updated!`, {override: true, color: 'lightGreen'});
+      logger.info('————————————————————————————————————\n', {override: true});
       return 1;
     } else {
-      logger.log('————————————————————————————————————\n', {override: true});
+      logger.info('————————————————————————————————————\n', {override: true});
       return 2;
     }
   } catch (err) {
@@ -423,7 +423,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
  */
 async function updateAllContainers(forced = false) {
   try {
-    logger.log('Updating all containers...\n', {override: true});
+    logger.info('Updating all containers...\n', {override: true});
 
     // Object to store the update results
     const updateResults = {
@@ -456,9 +456,9 @@ async function updateAllContainers(forced = false) {
     }
 
     // Log the results
-    logger.log(`${updateResults.total} Containers processed -- summary:`, {override: true});
-    logger.log('————————————————————————————————————', {override: true});
-    logger.log(`${updateResults.success} updated, ${updateResults.failed} failed.\n`, {override: true});
+    logger.info(`${updateResults.total} Containers processed -- summary:`, {override: true});
+    logger.info('————————————————————————————————————', {override: true});
+    logger.info(`${updateResults.success} updated, ${updateResults.failed} failed.\n`, {override: true});
 
   } catch (error) {
 
@@ -572,9 +572,9 @@ const containerToUpdate = process.argv[2];
 const forceUpdate = (process.argv[3] === 'true' || process.argv[4] === 'true');
 const forceImage = process.argv[3] !== ('true' || 'false') ? process.argv[3] : '';
 
-logger.log('\n🐳 Easy Docker Container Updater 2.0', {override: true, color: 'cyan'});
-logger.log('     © 2018-2024 Klaas Leussink     ', {override: true});
-logger.log('————————————————————————————————————\n', {override: true});
+logger.info('\n🐳 Easy Docker Container Updater 2.0', {override: true, color: 'cyan'});
+logger.info('     © 2018-2024 Klaas Leussink     ', {override: true});
+logger.info('————————————————————————————————————\n', {override: true});
 
 if (!containerToUpdate) {
   logger.error('Error: Container not specified. No soup for you\n');
@@ -586,7 +586,7 @@ if (containerToUpdate === '--all') {
   updateAllContainers(forceUpdate).then(() => {
     logger.sendLog((code) => {
       if (!code) {
-        logger.log(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
+        logger.info(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
         process.exit(0);
       } else {
         logger.error(`Done, but mail failed: ${code}`);
@@ -602,7 +602,7 @@ if (containerToUpdate === '--all') {
     //was updated
     logger.sendLog((code) => {
       if (!code) {
-        logger.log(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
+        logger.info(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
         process.exit(0);
       } else {
         logger.error(`Done, but mail failed: ${code}`);
@@ -611,6 +611,6 @@ if (containerToUpdate === '--all') {
     });
   } else {
     //not updated
-    logger.log(`Done. 👋 Bye!\n`, {override: true});
+    logger.info(`Done. 👋 Bye!\n`, {override: true});
   }
 }
