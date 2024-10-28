@@ -20,9 +20,33 @@
   - [Optional: stay up to date](#optional-stay-up-to-date)
 
 ## Introduction
-Easy Docker Container Updater is a NodeJS script that offers a simple way to maintain centralized configurations & automate updates to Docker containers. It is intended specifically for users with limited knowledge of Docker, who run containers on their (private NAS) server and want a fire-and-forget update solution. 
 
-It is particularly useful for those running a large amount of [*arr](https://wiki.servarr.com) containers. 
+Easy Docker Container Updater is a Node.js script designed to provide a simple, straightforward way to manage Docker container configurations and automate container updates. This tool is perfect for users with limited Docker experience who run containers on their private NAS or home servers and want a lightweight "fire-and-forget" solution for updating their containers.
+
+### Benefits
+- **Easy Setup**: Get started quickly with a simple Node.js script, no additional container or software needed.
+- **Centralized configurations**: All your container configurations are stored in one place.
+- **Flexibility**: Define variables (e.g., paths) once and reuse them across multiple containers for uniform configuration, which makes it particularly useful for use with [*arr](https://wiki.servarr.com) containers.
+- **Automated Updates**: Schedule this script to update all your containers at once, and get a full e-mail report after it's done.
+- **Lightweight Solution**: Perfect for home servers and small projects where orchestration tools (e.g., Kubernetes) would be overkill.
+
+### Example Usage
+To update all your containers in succession:
+```bash
+./container-update.js --all
+```
+To update a specific container:
+```bash
+./container-update.js <container_name>
+```
+
+### Why not just use Docker Compose or Watchtower?
+
+Easy Docker Container Updater doesn’t claim to offer new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+
+While Docker Compose is powerful for managing multi-container applications, and Watchtower provides fully hands-off updates, both require a certain familiarity with Docker’s ecosystem and configuration management. For users who just want a straightforward way to manage and update their containers without learning new tools or configurations, Easy Docker Container Updater offers a practical alternative.
+
+This script is intentionally simplified: it centralizes all container configurations, makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
 
 ## Requirements:
 - Docker
