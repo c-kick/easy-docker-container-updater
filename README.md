@@ -48,7 +48,7 @@ To update a specific container:
 
 ### Why not just use Docker Compose or Watchtower?
 
-By all means: if you use them; great! This script is not for you. Easy Docker Container Updater offer any new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that Docker Compose or Watchtower lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 
 While Docker Compose and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
