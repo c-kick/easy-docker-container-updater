@@ -54,7 +54,7 @@ To update a specific container:
 
 ### Why not just use Watchtower?
 
-By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that those management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+By all means, if you use Watchtower; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that existing management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 
 The main *'raison d'être'* for Easy Docker Container Updater is that I needed to break out of the constraints of Synology's native container manager, create a simple way to define container configurations with common parameters that I could use across multiple containers (such as path mappings), and have my containers update automatically without any intervention from me whatsoever. And make all this managable in one place.
 
