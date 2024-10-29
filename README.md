@@ -35,7 +35,7 @@ Easy Docker Container Updater is a Node.js script I originally wrote to streamli
 - **Centralized Configuration**: Manage all container settings in a single file.
 - **Flexibility**: Define variables (e.g., paths) once and reuse them across multiple containers for uniform configuration, which makes it particularly useful for use with [*arr](https://wiki.servarr.com) containers.
 - **Lightweight and Easy to Use**: Set up with a single script—no additional containers or advanced tools needed.
-- **Automated Updates and Email Reports**: Update all your containers with one command, whenever you want it, with optional email notifications.
+- **Schedule Updates and Receive Email Reports**: Schedule updating all your container, whenever *you* want it, with optional email update reports.
 - **Ideal for NAS/Home Server Users**: Designed to be simple yet powerful for small-scale setups
 
 ### Example Usage
