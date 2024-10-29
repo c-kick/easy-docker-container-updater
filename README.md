@@ -54,7 +54,7 @@ By all means, if you use them; great! Then this script is not for you. Easy Dock
 
 While Portainer and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
-But the main *'raison d'être'* for Easy Docker Container Updater is that I needed to break out of the constrictions of Synology's native container manager, create a simple way to define container configurations with common parameters I could use across multiple containers (such as path mappings), and having my containers update automatically without any intervantion by me whatsoever. All managed from one central place.
+But the main *'raison d'être'* for Easy Docker Container Updater is that I needed to break out of the constraints of Synology's native container manager, create a simple way to define container configurations with common parameters that I could use across multiple containers (such as path mappings), and have my containers update automatically without any intervention from me whatsoever. And manage it all from one central place.
 
 ## Requirements:
 - Docker
