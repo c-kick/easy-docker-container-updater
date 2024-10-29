@@ -14,16 +14,18 @@
   - [Using Git](#using-git)
   - [Manually](#manually) 
 - [Configuration](#configuration)
-  - [Example container configuration](#example-container-configuration)
 - [Usage](#usage)
   - [Quick Start](#quick-start)
-  - [Command Structure Overview](#command-structure-overview)
   - [Update a Single Container](#update-a-single-container)
   - [Update All Containers](#update-all-containers)
   - [Force Updating a Container](#force-updating-a-container)
   - [Force Updating a Container with a Different Image](#force-updating-a-container-with-a-different-image)
   - [Force Update All Containers](#force-update-all-containers)
   - [Optional: stay up to date](#optional-stay-up-to-date)
+- [Reference](#reference)
+  - [Options parameters](#options-parameters) 
+  - [Container Configuration Entry](#container-configuration-entry)
+  - [Command Structure Overview](#command-structure-overview)
 
 ## Introduction
 
@@ -78,10 +80,10 @@ If you have Git installed, you can clone the repository inside the directory of 
    ```
 
 ## Configuration
+> **Note:** See the [Reference section](#reference) for a description of all options you can use.
 
-### Configuration
-Open `container-config.js` in a text editor and adjust the `options` object to fit your setup. Each container you wish to update is defined in the `containers` object, where you can specify container images, arguments, network modes, and more. Here’s a sample entry:
-
+- Open `container-config.js` in a text editor and adjust the `options` object to fit your setup (the only required, and mandatory settings is `configBasePath`).
+- Each container you wish to manage/update should be defined in the `containers` object, where you can specify container images, arguments, network modes, and more. See the [reference section](#container-configuration-entry) for a list of available settings.
 
 <details>
   <summary>Click here for an example container config entry</summary>
@@ -108,27 +110,27 @@ Open `container-config.js` in a text editor and adjust the `options` object to f
       // If you need ports (i.e. in 'bridge' network mode)
       // specify them here, as [host-side-port, container-side-port]
       p: [
-      	[32400, 32400],
+	[32400, 32400],
       ],
 
       // Volume mappings
       v: [
-        ['/my-custom/path-1', '/path-1/'],
-        //add more if needed
+	['/my-custom/path-1', '/path-1/'],
+	//add more if needed
       ],
 
       // Environment variables
       e: {
-        TZ: 'Europe/Amsterdam',
-        PLEX_UID: 1234,
-        PLEX_GID: 45678
-        //add more if needed
+	TZ: 'Europe/Amsterdam',
+	PLEX_UID: 1234,
+	PLEX_GID: 45678
+	//add more if needed
       },
 
       // Device mappings
       device: [
-        ['/dev/dri', '/dev/dri'],
-        //add more if needed
+	['/dev/dri', '/dev/dri'],
+	//add more if needed
       ],
 
       privileged: 	false,	// optional - privileged mode
@@ -154,19 +156,6 @@ Run the script with the following commands to update containers:
 
 - **Update a Single Container**: `node container-update.js <container_name>`
 - **Update All Containers**: `node container-update.js --all`
-
-### Command Structure Overview
-Here are the main parameters you can use with `container-update.js`:
-
-```bash
-node container-update.js <container> <image> <forced>
-```
-
-| Parameter       | Description                                                                                         | Required | Example                           |
-|-----------------|-----------------------------------------------------------------------------------------------------|----------|-----------------------------------|
-| `<container>`   | The name of the container to update. You can also pass `--all` to update all configured containers. | Yes      | `plex`, `--all`                   |
-| `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
-| `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                             |
 
 ### Update A Single Container
 
@@ -243,3 +232,62 @@ If you have pulled the script via Git, and want to make sure you have the latest
 ```bash
 cd /your/path/to/easy-docker-container-updater && git pull && node ./container-update.js --all
 ```
+
+# Reference
+
+## Options parameters
+This is a description of all the available parameters you can (or must) enter in the `options` inside your `container-config.js`.
+
+| Parameter      | Description                                                                                                                         | Required | Example              | Default              |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------|----------|----------------------|----------------------|
+| configBasePath | The base path used to store container configurations. This path will be appended with `/<container-name>/config/` on container creation. If the path already exists, it will be used; otherwise, it will be created as an empty directory. | Yes      | `/volume1/docker`    | N/A                  |
+| debug          | Global debug flag that controls if detailed debug messages are shown.                                                               | No       | `false`              | `false`              |
+| logLevel       | Logging level. `0` shows all logs, `1` shows info, warnings, and errors, `2` shows warnings and errors, `3` shows only errors.      | No       | `1`                  | `1`                  |
+| network        | Global network type for containers.                                                                                                 | No       | `'host'`             | `'host'`             |
+| timezone       | Global timezone setting for containers.                                                                                             | No       | `'Europe/Amsterdam'` | `'Europe/Amsterdam'` |
+| alwaysRun      | If true, the container will always run after updating, even if it was stopped before.                                               | No       | `false`              | `false`              |
+| prune          | Global setting for removing unused containers after updating.                                                                       | No       | `true`               | `true`               |
+| restart        | Global restart policy for containers (e.g., `'always'`, `'unless-stopped'`).                                                        | No       | `'on-failure'`   	 | `'unless-stopped'`   |
+| PUID           | User ID to set the Docker container user.                                                                                           | No       | `1234`               | `1000`               |
+| PGID           | Group ID to set the Docker container group.                                                                                         | No       | `56789`              | `1000`               |
+| email_from     | Sender email address for update reports.                                                                                            | No       | `'from@example.com'` | `null`               |
+| email_to       | Receiver email address for update reports.                                                                                          | No       | `'to@example.com'`   | `null`               |
+| sendmail       | Path to the `sendmail` executable, typically does not need modification.                                                            | No       | `'/usr/sbin/sendmail'` | `'/usr/sbin/sendmail'` |
+
+## Container configuration entry
+These are the assignable parameters for each container entry in the `containers` inside your `container-config.js`.
+
+| Parameter      | Description                                                                                           | Required | Example                         | Default  |
+|----------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|----------|
+| name           | The name to use for this container.                                                                   | Yes      | `'plex'`                        | N/A      |
+| debug          | Debug override for this container. If `true`, commands are output to the console instead of being run. | No       | `true`                          | `false`  |
+| image          | The repository and image to use for the container.                                                    | Yes      | `'plexinc/pms-docker:plexpass'` | N/A      |
+| alwaysRun      | If `true`, forces the container to run even if it was stopped before updating.                        | No       | `false`                         | `false`  |
+| arguments      | Arguments to pass to the `docker create` command for container setup.                                 | No       | See the `arguments` parameters below        | N/A      |
+
+#### The `arguments` section
+
+| Parameter      | Description                                                                                           | Required | Example                         | Default  |
+|----------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|----------|
+| net            | Network mode for the container (e.g., 'bridge', 'host').                                              | No       | `'bridge'`                      | N/A      |
+| p              | Port mapping-sets specified as `[host-side-port, container-side-port]` inside an array `[]`.          | No       | `[[32400, 32400], [80, 8080]]`  | `[]`     |
+| v              | Volume mapping-sets as `[host-path, container-path]` inside an array `[]`.                            | No       | `[['/my-custom/path-1', '/path-1/'], ['/my-custom/path-2', '/path-2/']]` | `[]` |
+| e              | Environment variables specified as key-value pairs.                                                   | No       | `{ TZ: 'Europe/Amsterdam', PLEX_UID: 1234, PLEX_GID: 45678 }` | `{}` |
+| device         | Device mapping-sets as `[host-device, container-device]` inside an array `[]`.                        | No       | `[['/dev/dri', '/dev/dri']]`    | `[]`     |
+| privileged     | Whether to run the container in privileged mode.                                                      | No       | `false`                         | `false`  |
+| memory         | Memory limit for the container (e.g., '768m').                                                        | No       | `'768m'`                        | N/A      |
+| restart        | Restart policy for the container (e.g., 'always', 'unless-stopped').                                  | No       | `'always'`                      | N/A      |
+| whatever	 | You can keep adding parameters if you want, such as `gpus`, they should be processed into the docker create command automagically. If hey are boolean `true` values, they are passed as `--whatever`, else as `--whatever=whateveryouwant` pairs.  | No       | `'whateveryouwant'`                      | N/A      |
+
+## Command Structure Overview
+Here are the main parameters you can use with `container-update.js`:
+
+```bash
+node container-update.js <container> <image> <forced>
+```
+
+| Parameter       | Description                                                                                         | Required | Example                           |
+|-----------------|-----------------------------------------------------------------------------------------------------|----------|-----------------------------------|
+| `<container>`   | The name of the container to update. You can also pass `--all` to update all configured containers. | Yes      | `plex`, `--all`                   |
+| `<image>`       | (Optional) Specify an alternate Docker image (`repository:image`) to use for the container update.  | No       | `plexinc/pms-docker:latest`       |
+| `<forced>`      | (Optional) Set to `true` to force-update a container, even if no new image is available.            | No       | `true`                            |
