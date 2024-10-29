@@ -1,5 +1,5 @@
 # 🐳 Easy Docker Container Updater
-[![NodeJS Version](https://img.shields.io/badge/Node.js->%3D%208.0.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=98F483&style=plastic)](#requirements)
+[![NodeJS Version](https://img.shields.io/badge/Node.js->%3D%2015.14.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=98F483&style=plastic)](#requirements)
 ![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
 [![License](https://img.shields.io/badge/License-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
 ![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?style=for-the-badge&labelColor=4384F5&style=for-the-badge&logo=synology&logoColor=white&style=plastic)
@@ -56,7 +56,7 @@ This script is intentionally simplified: it centralizes all container configurat
 
 ## Requirements:
 - Docker
-- NodeJS (v8.0.0 or higher)
+- NodeJS (15.14.0 or higher)
 - A text-editor to configure the script
 
 ## Installation
