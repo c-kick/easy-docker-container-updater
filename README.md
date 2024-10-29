@@ -29,7 +29,7 @@
 
 ## Introduction
 
-Easy Docker Container Updater is a Node.js script I originally wrote to streamline the update process for my containers when I was just starting out with Docker. Years later, it’s still reliably handling my container updates, so I decided to publish it as open-source. This tool is designed for users who want a simple way to manage and update Docker containers—particularly on private NAS or home servers. It’s perfect for those with limited Docker experience who want more control over their containers, or just anyone looking for a lightweight, “fire-and-forget” solution without having to dive into something like Watchtower.
+Easy Docker Container Updater is a Node.js script I originally wrote to streamline the update process for my containers when I was just starting out with Docker. Years later, it’s still reliably handling my container updates, so I decided to publish it as open-source. This tool is designed for users who want a simple way to manage and update Docker containers—particularly on private NAS or home servers. It’s perfect for those with limited Docker experience who want more control over their containers, or just anyone looking for a lightweight, “fire-and-forget” solution without having to dive into something like [Watchtower](https://github.com/containrrr/watchtower).
 
 ### Features
 - **Centralized Configuration**: Manage all container settings in a single file.
