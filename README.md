@@ -269,14 +269,14 @@ These are the assignable parameters for each container entry in `containers` ins
 
 | Parameter      | Description                                                                                           | Required | Example                         | Default  |
 |----------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|----------|
-| net            | Network mode for the container (e.g., 'bridge', 'host').                                              | No       | `'bridge'`                      | N/A      |
+| net            | Network mode for the container (e.g., 'bridge', 'host').                                              | No       | `'bridge'`                      | `network` value as defined in `options` |
 | p              | Port mapping-sets specified as `[host-side-port, container-side-port]` inside an array `[]`.          | No       | `[[32400, 32400], [80, 8080]]`  | `[]`     |
 | v              | Volume mapping-sets as `[host-path, container-path]` inside an array `[]`.                            | No       | `[['/my-custom/path-1', '/path-1/'], ['/my-custom/path-2', '/path-2/']]` | `[]` |
 | e              | Environment variables specified as key-value pairs.                                                   | No       | `{ TZ: 'Europe/Amsterdam', PLEX_UID: 1234, PLEX_GID: 45678 }` | `{}` |
 | device         | Device mapping-sets as `[host-device, container-device]` inside an array `[]`.                        | No       | `[['/dev/dri', '/dev/dri']]`    | `[]`     |
 | privileged     | Whether to run the container in privileged mode.                                                      | No       | `false`                         | `false`  |
 | memory         | Memory limit for the container (e.g., '768m').                                                        | No       | `'768m'`                        | N/A      |
-| restart        | Restart policy for the container (e.g., 'always', 'unless-stopped').                                  | No       | `'always'`                      | N/A      |
+| restart        | Restart policy for the container (e.g., 'always', 'unless-stopped').                                  | No       | `'always'`                      | `restart` value as defined in `options` |
 | whatever	 | You can keep adding parameters if you want, such as `gpus`, they should be processed into the docker create command automagically. If hey are boolean `true` values, they are passed as `--whatever`, else as `--whatever=whateveryouwant` pairs.  | No       | `'whateveryouwant'`                      | N/A      |
 
 ## Command Structure Overview
