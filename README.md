@@ -68,6 +68,7 @@ If you have Git installed, you can clone the repository inside the directory of 
    npm install
    npm run config
    ```
+> **Note:** The `npm` commands are optional, and just make the process of creating a config file a little bit easier. If you have no NPM installed, just follow step 2 below ('Manually') to complete the configuration.
 ### Manually
 1. Download `container-update.js` and `container-config-example.js` and place them (together) in a directory of your choosing.
 2. Copy and rename the example configuration file, `container-config-example.js`, to `container-config.js`, i.e:
