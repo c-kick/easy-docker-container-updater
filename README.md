@@ -277,7 +277,7 @@ These are the assignable parameters for each container entry in `containers` ins
 | privileged     | Whether to run the container in privileged mode.                                                      | No       | `false`                         | `false`  |
 | memory         | Memory limit for the container (e.g., '768m').                                                        | No       | `'768m'`                        | N/A      |
 | restart        | Restart policy for the container (e.g., 'always', 'unless-stopped').                                  | No       | `'always'`                      | `restart` value as defined in `options` |
-| whatever	 | You can keep adding parameters if you want, such as `gpus`, they should be processed into the docker create command automagically. If hey are boolean `true` values, they are passed as `--whatever`, else as `--whatever=whateveryouwant` pairs.  | No       | `'whateveryouwant'`                      | N/A      |
+| whatever	 | You can keep adding parameters if you want, such as `gpus`, they should be processed into the docker create command automagically. If they are boolean `true` values, they are passed as `--whatever`, else as `--whatever=whateveryouwant` pairs.  | No       | `'whateveryouwant'`                      | N/A      |
 
 ## Command Structure Overview
 Here are the main parameters you can use with `container-update.js`:
