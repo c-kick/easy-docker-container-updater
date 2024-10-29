@@ -1,14 +1,14 @@
 # 🐳 Easy Docker Container Updater
-[![NodeJS Version](https://img.shields.io/badge/Node.js->%3D%2015.14.0-6DA55F?style=for-the-badge&logo=node.js&logoColor=98F483&style=plastic)](#requirements)
-![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
-[![License](https://img.shields.io/badge/License-GNU-blue.svg?style=for-the-badge&logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
-![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?style=for-the-badge&labelColor=4384F5&style=for-the-badge&logo=synology&logoColor=white&style=plastic)
+[![NodeJS Version](https://img.shields.io/badge/Node.js->%3D%2015.14.0-6DA55F?logo=node.js&logoColor=98F483&style=plastic)](#requirements)
+![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?logo=docker&logoColor=white&style=plastic)
+[![License](https://img.shields.io/badge/License-GNU-blue.svg?logoColor=white&style=plastic)](https://github.com/c-kick/easy-docker-container-updater/blob/main/LICENSE)
+![Synology](https://img.shields.io/badge/Synology%20DSM-compatible-555.svg?labelColor=4384F5&logo=synology&logoColor=white&style=plastic)
 
 ## Table of Contents
 - [Introduction](#introduction)
   - [Features](#features)
   - [Example Usage](#example-usage)
-  - [Why not just use Docker Compose or even Portainer / Watchtower?](#why-not-just-use-docker-compose-or-even-portainer--watchtower)
+  - [Why not just use Watchtower?](#why-not-just-use-watchtower)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Using Git](#using-git)
@@ -29,12 +29,16 @@
 
 ## Introduction
 
-Easy Docker Container Updater is a Node.js script I originally wrote to streamline the update process for my containers when I was just starting out with Docker. Years later, it’s still reliably handling my container updates, so I decided to publish it as open-source. This tool is designed for users who want a simple way to manage and update Docker containers—particularly on private NAS or home servers. It’s perfect for those with limited Docker experience who want more control over their containers, or just anyone looking for a lightweight, “fire-and-forget” solution without having to dive into something like [Watchtower](https://github.com/containrrr/watchtower).
+Easy Docker Container Updater is a Node.js script I originally wrote to streamline the update process for my containers when I was just starting out with Docker. 
+Years later, it’s still reliably handling my container updates, so I decided to publish it as open-source.
+This tool is designed for users who want a simple way to manage and update Docker containers—particularly on private NAS or home servers. 
+It’s perfect for beginners or home server enthusiasts who want more control over their containers, or just anyone looking for a lightweight, 
+“fire-and-forget” solution without having to dive into something like [Watchtower](https://github.com/containrrr/watchtower).
 
 ### Features
-- **Centralized Configuration**: Manage all container settings in a single file.
-- **Flexibility**: Define variables (e.g., paths) once and reuse them across multiple containers for uniform configuration, which makes it particularly useful for use with [*arr](https://wiki.servarr.com) containers.
-- **Lightweight and Easy to Use**: Set up with a single script—no additional containers or advanced tools needed.
+- **Centralized**: Manage all your container settings in a single place.
+- **Flexible**: Define and reuse variables across multiple containers for a more uniform setup; particularly useful for use with [*arr](https://wiki.servarr.com) containers.
+- **Lightweight**: Just a single script—no additional containers or advanced tools needed.
 - **Schedule Updates and Receive Email Reports**: Schedule updating all your container, whenever *you* want it, with optional email update reports.
 - **Ideal for NAS/Home Server Users**: Designed to be simple yet powerful for small-scale setups
 
@@ -48,7 +52,7 @@ To update a specific container:
 ./container-update.js <container_name>
 ```
 
-### Why not just use Docker Compose or even Portainer / Watchtower?
+### Why not just use Watchtower?
 
 By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that those management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 

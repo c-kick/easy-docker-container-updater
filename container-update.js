@@ -37,30 +37,20 @@ const fs = require('fs');
  */
 const logger = {
   logCache: [],
-  colors: {
+  colors:   {
     reset: "\x1b[0m",
     // Standard and Bright Colors
-    black:         "\x1b[30m", red: "\x1b[31m", green: "\x1b[32m", yellow: "\x1b[33m", blue: "\x1b[34m",
-    magenta:       "\x1b[35m", cyan: "\x1b[36m", white: "\x1b[37m", brightBlack: "\x1b[90m",
-    brightRed:     "\x1b[91m", brightGreen: "\x1b[92m", brightYellow: "\x1b[93m", brightBlue: "\x1b[94m",
-    brightMagenta: "\x1b[95m", brightCyan: "\x1b[96m", brightWhite: "\x1b[97m",
+    black: "\x1b[30m", red: "\x1b[31m", green: "\x1b[32m", yellow: "\x1b[33m", blue: "\x1b[34m", magenta: "\x1b[35m", cyan: "\x1b[36m", white: "\x1b[37m", brightBlack: "\x1b[90m", brightRed: "\x1b[91m", brightGreen: "\x1b[92m", brightYellow: "\x1b[93m", brightBlue: "\x1b[94m", brightMagenta: "\x1b[95m", brightCyan: "\x1b[96m", brightWhite: "\x1b[97m",
 
     // Background Colors
-    bgBlack:       "\x1b[40m", bgRed: "\x1b[41m", bgGreen: "\x1b[42m", bgYellow: "\x1b[43m",
-    bgBlue:        "\x1b[44m", bgMagenta: "\x1b[45m", bgCyan: "\x1b[46m", bgWhite: "\x1b[47m",
-    bgBrightBlack: "\x1b[100m", bgBrightRed: "\x1b[101m", bgBrightGreen: "\x1b[102m", bgBrightYellow: "\x1b[103m",
-    bgBrightBlue:  "\x1b[104m", bgBrightMagenta: "\x1b[105m", bgBrightCyan: "\x1b[106m", bgBrightWhite: "\x1b[107m",
+    bgBlack: "\x1b[40m", bgRed: "\x1b[41m", bgGreen: "\x1b[42m", bgYellow: "\x1b[43m", bgBlue: "\x1b[44m", bgMagenta: "\x1b[45m", bgCyan: "\x1b[46m", bgWhite: "\x1b[47m", bgBrightBlack: "\x1b[100m", bgBrightRed: "\x1b[101m", bgBrightGreen: "\x1b[102m", bgBrightYellow: "\x1b[103m", bgBrightBlue: "\x1b[104m", bgBrightMagenta: "\x1b[105m", bgBrightCyan: "\x1b[106m", bgBrightWhite: "\x1b[107m",
 
     // 256-Color Approximations
-    orange:    "\x1b[38;5;214m", pink: "\x1b[38;5;205m", lightGreen: "\x1b[38;5;120m",
-    lightBlue: "\x1b[38;5;81m", purple: "\x1b[38;5;135m",
+    orange: "\x1b[38;5;214m", pink: "\x1b[38;5;205m", lightGreen: "\x1b[38;5;120m", lightBlue: "\x1b[38;5;81m", purple: "\x1b[38;5;135m",
 
     // HTML-safe colors
     htmlColors: {
-      white: "#FFFFFF", black: "#000000", red: "#d50d0d", green: "#00b200", yellow: "#FFFF00",
-      blue: "#0f3abb", magenta: "#b215b2", cyan: "#00b0c0", brightYellow: "#d98000",
-      orange: "#FFA500", pink: "#FFC0CB", lightGreen: "#67b767", lightBlue: "#7ba5b0",
-      purple: "#800080"
+      white: "#FFFFFF", black: "#000000", red: "#d50d0d", green: "#00b200", yellow: "#FFFF00", blue: "#0f3abb", magenta: "#b215b2", cyan: "#00b0c0", brightYellow: "#d98000", orange: "#FFA500", pink: "#FFC0CB", lightGreen: "#67b767", lightBlue: "#7ba5b0", purple: "#800080"
     },
   },
   // Mapping 256-color names to basic colors for fallbacks
@@ -215,6 +205,7 @@ try {
   }
 }
 
+// Merge imported options with default options to create the final options object
 const options = {
   ...{
     debug:      false,
@@ -227,7 +218,8 @@ const options = {
     email_from: null,
     email_to:   null,
     sendmail:   '/usr/sbin/sendmail'
-  }, ...importedOptions
+  },
+  ...importedOptions
 };
 
 /**
@@ -237,6 +229,7 @@ const options = {
  */
 function containerExists(containerName) {
   try {
+    // Execute Docker inspect command to check if the container exists
     execSync(`docker inspect ${containerName}`, {stdio: 'pipe'});
     return true;
   } catch (error) {
@@ -272,10 +265,34 @@ function isContainerRunning(containerName) {
  * @param {boolean} debug - Whether to enable debug logging.
  */
 function stopContainer(containerName, debug = false) {
-  _execSync(`docker stop ${containerName}`, {
-    debug,
-    success: () => logger.log(`Container stopped.`)
-  });
+  // Execute Docker stop command
+  if (isContainerRunning(containerName)) {
+    return _execSync(`docker stop ${containerName}`, {
+      debug,
+      success: () => logger.log(`Container stopped.`)
+    });
+  } else {
+    logger.warn(`Container '${containerName}' already stopped.`);
+    return true;
+  }
+}
+
+/**
+ * Starts a Docker container.
+ * @param {string} containerName - The name of the container to start.
+ * @param {boolean} debug - Whether to enable debug logging.
+ */
+function startContainer(containerName, debug = false) {
+  // Execute Docker stop command
+  if (!isContainerRunning(containerName)) {
+    return _execSync(`docker start ${containerName}`, {
+      debug,
+      success: () => logger.log(`Container started.`)
+    });
+  } else {
+    logger.warn(`Container '${containerName}' already running.`);
+    return true;
+  }
 }
 
 /**
@@ -284,10 +301,16 @@ function stopContainer(containerName, debug = false) {
  * @param {boolean} debug - Whether to enable debug logging.
  */
 function removeContainer(containerName, debug = false) {
-  _execSync(`docker rm ${containerName}`, {
-    debug,
-    success: () => logger.log(`Container removed.`)
-  });
+  // Execute Docker remove command
+  if (containerExists(containerName)) {
+    return _execSync(`docker rm ${containerName}`, {
+      debug,
+      success: () => logger.log(`Container removed.`)
+    });
+  } else {
+    logger.warn(`Container '${containerName}' does not exist.`);
+    return true;
+  }
 }
 
 /**
@@ -301,21 +324,22 @@ function createContainer(containerName, container) {
   const args = {
     name: containerName,
     ...arguments,
-    v: [...(arguments?.v ?? []), [conditionalQuote(configDir), '/config/']],
-    e: {
+    v:       [...(arguments?.v ?? []), [conditionalQuote(configDir), '/config/']],
+    e:       {
       ...(arguments?.e ?? {}),
-      TZ: arguments?.e?.TZ ?? options.timezone,
+      TZ:   arguments?.e?.TZ ?? options.timezone,
       PGID: arguments?.e?.PGID ?? options.PGID,
       PUID: arguments?.e?.PUID ?? options.PUID,
     },
-    net: arguments?.net ?? options.network,
+    net:     arguments?.net ?? options.network,
     restart: arguments?.restart ?? options.restart,
   };
 
+  // Generate Docker create command with all the arguments
   const createCmd = `docker create ${flattenDockerArgs(args)} ${image}`;
   _execSync(createCmd.replace(/\s+/g, ' '), {
     debug:   (containerDebug ?? options.debug),
-    success: (output) => {
+    success: () => {
       logger.log(`Container created.`, {override: true});
     }
   });
@@ -329,19 +353,19 @@ function createContainer(containerName, container) {
  * @returns {number} - 1 if updated, 2 if no update, 0 if update failed.
  */
 function updateContainer(containerName, forcedImage, forcedUpdate = false) {
-
   const container = containers[containerName];
   logger.info(`Container: '${containerName}'`, {override: true});
 
   if (!container) {
     logger.error(`Error: No configuration found for container '${containerName}'. No soup for you.\n`);
-    return;
+    return 0;
   } else if (container.debug) {
     logger.warn(`Note: Container config has debugging enabled!\nOnly showing commands, not running them.\n`, {override: true});
   }
 
+  // Construct the config directory path for the container
   container.configDir = `${options.configBasePath.replace(/\/+$/, '').concat('/')}/${containerName}/config`;
-  container.image = (typeof forcedImage === 'string' ? forcedImage : null) || container.image
+  container.image = (typeof forcedImage === 'string' ? forcedImage : null) || container.image;
 
   const debug = (container.debug ?? options.debug);
   const exists = containerExists(containerName);
@@ -356,7 +380,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
   }
 
   if (!container.image.toLowerCase().includes(containerName.toLowerCase())) {
-    logger.warn(`\n⚠ Warning: there seems to be a mismatch in the container's name ('${containerName}')\nand the image used ('${container.configDir}').\nCheck your configuration, or ignore this warning if you are sure.\n`, {override: debug});
+    logger.warn(`\nWarning: there seems to be a mismatch in the container's name ('${containerName}')\nand the image used ('${container.configDir}').\nCheck your configuration, or ignore this warning if you are sure.\n`, {override: debug});
   }
 
   // Pull the latest image
@@ -364,15 +388,15 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
     logger.log(`Checking for image update...`, {override: debug});
     const pullResult = _execSync(`docker pull ${container.image}`, {debug}).toString();
     const hasUpdate = !pullResult.includes('up to date');
-    const updateMsg = `${hasUpdate ? '' : 'No '}update available${(hasUpdate) ? '!' : '.'}`;
+    const updateMsg = `${hasUpdate ? '' : 'No '}update available${hasUpdate ? '!' : '.'}`;
     logger.info(`${updateMsg.charAt(0).toUpperCase() + updateMsg.slice(1)}`, {override: true});
 
+    // Proceed with update if needed
     if (hasUpdate || forcedUpdate || !exists || forcedImage) {
       if (forcedUpdate) {
         logger.warn(`Update was forced!`, {override: true});
       }
       // If update found or forced, remove existing container and recreate
-
       if (exists) {
         if (wasRunning) {
           logger.log(`Container running, so start after update.`, {override: debug});
@@ -400,13 +424,12 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
 
       // Start the container if set, or if not set check default option
       if ((container.alwaysRun ?? options.alwaysRun) || wasRunning) {
-        _execSync(`docker start ${containerName}`, {
-          debug, success: (output) => {
-            logger.info(`Container started.`);
-          }
-        });
+        startContainer(containerName);
       }
       logger.info(`Container '${containerName}' was updated!`, {override: true, color: 'lightGreen'});
+      if (debug) {
+        logger.warn(`But not really, as debugging was set for this container.`, {override: true});
+      }
       logger.info('————————————————————————————————————\n', {override: true});
       return 1;
     } else {
@@ -436,7 +459,7 @@ async function updateAllContainers(forced = false) {
     };
 
     for (const containerName of Object.keys(containers)) {
-      const result = await updateContainer(containerName, forced);
+      const result = updateContainer(containerName, forced);
 
       // Increment the total containers processed
       updateResults.total++;
@@ -449,26 +472,11 @@ async function updateAllContainers(forced = false) {
       }
     }
 
-    if (options.prune && updateResults.success) {
-      logger.info("\nContainers updated, now pruning...", {override: true});
-      _execSync(`docker image prune -a`, {
-        success: (output) => {
-          logger.info(`Pruning done!\n`, {override: true});
-        }
-      });
-    }
-
-    // Log the results
-    logger.info(`${updateResults.total} Containers processed -- summary:`, {override: true});
-    logger.info('————————————————————————————————————', {override: true});
-    logger.info(`${updateResults.success} updated, ${updateResults.failed} failed.\n`, {override: true});
+    return updateResults;
 
   } catch (error) {
-
     logger.error(`Error updating all containers: ${error.message}`);
-
   }
-
 }
 
 /**
@@ -484,6 +492,7 @@ function mimeEncodeHeader(text) {
  * Executes a shell command with additional success and failure handling.
  * @param {string} cmd - The command to execute.
  * @param {Object} [args={}] - Optional arguments for callbacks and debugging.
+ * @param {Boolean} [args.debug] - Optional debug override flag.
  * @param {Function} [args.success=null] - Callback on successful execution.
  * @param {Function} [args.fail] - Callback on failed execution.
  * @returns {string|boolean} - The result of the command or true if debug mode is enabled.
@@ -521,7 +530,6 @@ function _execSync(cmd, args = {}) {
       throw error;
     }
   }
-
 }
 
 /**
@@ -529,34 +537,37 @@ function _execSync(cmd, args = {}) {
  * @param {object} args - The arguments object
  * @returns {string} - The flattened arguments object
  */
-
 function flattenDockerArgs(args) {
   let result = [];
 
+  // Iterate through each key-value pair in the arguments object
   for (const [key, value] of Object.entries(args)) {
+    // Determine the prefix for the argument, using double dashes for long keys and single dash for short keys
     const prefix = key.length > 1 ? `--${key}` : `-${key}`;
 
     if (Array.isArray(value)) {
-      // Handle arrays of pairs, like `-v /src:/dest`
+      // Handle arrays of pairs, like volume bindings (`-v /src:/dest`)
       value.forEach(item => {
-        if (Array.isArray(item)) {
+        // Ensure the item is an array of length 2 before proceeding
+        if (Array.isArray(item) && item.length === 2) {
           result.push(`${prefix} ${conditionalQuote(item[0])}:${conditionalQuote(item[1])}`);
         }
       });
     } else if (typeof value === 'object' && value !== null) {
-      // Handle environment variables object `-e key=value`
+      // Handle environment variables object (`-e key=value`)
       for (const [envKey, envValue] of Object.entries(value)) {
         result.push(`-e ${envKey}=${conditionalQuote(envValue.toString())}`);
       }
     } else if (typeof value === 'string' || typeof value === 'number') {
-      // Handle `--key=value` for strings and numbers
+      // Handle key-value pairs for strings and numbers (`--key=value`)
       result.push(`${prefix}=${conditionalQuote(value.toString())}`);
     } else if (typeof value === 'boolean' && value) {
-      // Handle boolean flags
+      // Handle boolean flags (`--flag` or `-f`), only include if the value is true
       result.push(prefix);
     }
   }
 
+  // Join all parts into a single string and trim any excess whitespace
   return result.join(' ').trim();
 }
 
@@ -568,36 +579,55 @@ function flattenDockerArgs(args) {
 function conditionalQuote(value) {
   // Check if the string starts and ends with quotes
   // and if the string is already quoted, return it as-is.
-  if (/^".*"$/.test(value) || /^'.*'$/.test(value)) { return value; }
+  if (/^".*"$/.test(value) || /^'.*'$/.test(value)) {
+    return value;
+  }
   // If the string contains spaces, wrap it in quotes
-  if (/\s/.test(value)) { return `"${value}"`;  }
+  if (/\s/.test(value)) {
+    return `"${value}"`;
+  }
   return value; // If no spaces, return the original string
 }
-
 
 // Entry point checks and command line argument handling
 const containerToUpdate = process.argv[2];
 const forceUpdate = (process.argv[3] === 'true' || process.argv[4] === 'true');
 const forceImage = process.argv[3] !== ('true' || 'false') ? process.argv[3] : '';
 
+// Display script information
 logger.info('\n🐳 Easy Docker Container Updater 2.0', {override: true, color: 'cyan'});
 logger.info('     © 2018-2024 Klaas Leussink     ', {override: true});
 logger.info('————————————————————————————————————\n', {override: true});
 
+// Validate input arguments
 if (!containerToUpdate) {
-  logger.error('Error: Container not specified. No soup for you\n');
-  logger.error('Usage: ./container-update.js <container> <image> <forced>\n');
+  logger.error('Error: Container not specified. No soup for you\nUsage: ./container-update.js <container> <image> <forced>. See the readme for more instructions.\n');
   process.exit(1);
 }
 
+// Ensure the config base path is defined
 if (!options.configBasePath) {
-  logger.error('Error: `configBasePath` not defined. No soup for you\n');
-  logger.error('Edit your `container-config.js` file and add this to the `options` object. See the readme for instructions.\n');
+  logger.error('Error: `configBasePath` not defined. No soup for you\nEdit your `container-config.js` file and add this to the `options` object. See the readme for instructions.\n');
   process.exit(1);
 }
 
+// Handle updating all containers if '--all' argument is passed
 if (containerToUpdate === '--all') {
-  updateAllContainers(forceUpdate).then(() => {
+  updateAllContainers(forceUpdate).then((updateResults) => {
+
+    // Prune images if configured and successful updates occurred
+    if (options.prune && updateResults.success) {
+      logger.info("\nContainers updated, now pruning...", {override: true});
+      _execSync(`docker image prune -a`, {
+        success: () => {
+          logger.info(`Pruning done!\n`, {override: true});
+        }
+      });
+    }
+
+    // Log the results
+    logger.info(`${updateResults.total} Containers processed -- summary:\n————————————————————————————————————\n${updateResults.success} updated, ${updateResults.failed} failed.\n`, {override: true});
+
     logger.sendLog((code) => {
       if (!code) {
         logger.info(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
@@ -609,11 +639,13 @@ if (containerToUpdate === '--all') {
     });
   });
 } else if (containerToUpdate === '--help') {
+  // Handle help argument
   logger.error('Usage: ./container-update.js <container> <image> <forced>\n');
   process.exit(0);
 } else {
+  // Update a specific container
   if (updateContainer(containerToUpdate, forceImage, forceUpdate) === 1) {
-    //was updated
+    // If updated, send log email
     logger.sendLog((code) => {
       if (!code) {
         logger.info(`Done. 📨 Report sent. 👋 Bye!\n`, {override: true});
@@ -624,7 +656,7 @@ if (containerToUpdate === '--all') {
       }
     });
   } else {
-    //not updated
+    // If not updated, exit without email
     logger.info(`Done. 👋 Bye!\n`, {override: true});
   }
 }
