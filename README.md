@@ -35,7 +35,7 @@ Easy Docker Container Updater is a Node.js script I originally wrote to streamli
 - **Centralized Configuration**: Manage all container settings in a single file.
 - **Flexibility**: Define variables (e.g., paths) once and reuse them across multiple containers for uniform configuration, which makes it particularly useful for use with [*arr](https://wiki.servarr.com) containers.
 - **Lightweight and Easy to Use**: Set up with a single script—no additional containers or advanced tools needed.
-- **Automated Updates and Email Reports**: Update all your containers with one command, with optional email notifications.
+- **Automated Updates and Email Reports**: Update all your containers with one command, whenever you want it, with optional email notifications.
 - **Ideal for NAS/Home Server Users**: Designed to be simple yet powerful for small-scale setups
 
 ### Example Usage
@@ -54,7 +54,7 @@ By all means, if you use them; great! Then this script is not for you. Easy Dock
 
 While Portainer and Watchtower are robust tools for multi-container management and automated updates, they can be overwhelming or excessive for users who simply want a straightforward update solution. Easy Docker Container Updater offers a lightweight, controlled approach to updating containers, without the steep learning curve of more advanced tools.
 
-This script is intentionally simplified: it centralizes all container configurations (or, at least those you want to manage with the script), makes updates manageable with a single command, and allows easy customization — especially for those already familiar with JavaScript. It’s a great fit for anyone who feels overwhelmed by more advanced tools but still wants a dependable, automated update solution for their Docker containers.
+But the main *'raison d'être'* for Easy Docker Container Updater is that I needed to break out of the constrictions of Synology's native container manager, create a simple way to define container configurations with common parameters I could use across multiple containers (such as path mappings), and having my containers update automatically without any intervantion by me whatsoever. All managed from one central place.
 
 ## Requirements:
 - Docker
