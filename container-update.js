@@ -217,13 +217,16 @@ try {
 
 const options = {
   ...{
-    debug:     false,
-    logLevel:  1,
-    network:   'host',
-    timezone:  'Europe/Amsterdam',
-    alwaysRun: false,
-    prune:     true,
-    restart:   'unless-stopped',
+    debug:      false,
+    logLevel:   1,
+    network:    'host',
+    timezone:   'Europe/Amsterdam',
+    alwaysRun:  false,
+    prune:      true,
+    restart:    'unless-stopped',
+    email_from: null,
+    email_to:   null,
+    sendmail:   '/usr/sbin/sendmail'
   }, ...importedOptions
 };
 
@@ -298,7 +301,7 @@ function createContainer(containerName, container) {
   const args = {
     name: containerName,
     ...arguments,
-    v: [...(arguments?.v ?? []), [conditionalQuote(configDir), '/config']],
+    v: [...(arguments?.v ?? []), [conditionalQuote(configDir), '/config/']],
     e: {
       ...(arguments?.e ?? {}),
       TZ: arguments?.e?.TZ ?? options.timezone,
@@ -337,7 +340,7 @@ function updateContainer(containerName, forcedImage, forcedUpdate = false) {
     logger.warn(`Note: Container config has debugging enabled!\nOnly showing commands, not running them.\n`, {override: true});
   }
 
-  container.configDir = `${options.configBasePath}/${containerName}/config`;
+  container.configDir = `${options.configBasePath.replace(/\/+$/, '').concat('/')}/${containerName}/config`;
   container.image = (typeof forcedImage === 'string' ? forcedImage : null) || container.image
 
   const debug = (container.debug ?? options.debug);
@@ -563,7 +566,12 @@ function flattenDockerArgs(args) {
  * @returns {string|*} - The quoted value if it contains spaces, or the original value.
  */
 function conditionalQuote(value) {
-  return ((typeof value == 'string') && value.includes(' ')) ? `"${value}"` : value;
+  // Check if the string starts and ends with quotes
+  // and if the string is already quoted, return it as-is.
+  if (/^".*"$/.test(value) || /^'.*'$/.test(value)) { return value; }
+  // If the string contains spaces, wrap it in quotes
+  if (/\s/.test(value)) { return `"${value}"`;  }
+  return value; // If no spaces, return the original string
 }
 
 
@@ -579,6 +587,12 @@ logger.info('——————————————————————�
 if (!containerToUpdate) {
   logger.error('Error: Container not specified. No soup for you\n');
   logger.error('Usage: ./container-update.js <container> <image> <forced>\n');
+  process.exit(1);
+}
+
+if (!options.configBasePath) {
+  logger.error('Error: `configBasePath` not defined. No soup for you\n');
+  logger.error('Edit your `container-config.js` file and add this to the `options` object. See the readme for instructions.\n');
   process.exit(1);
 }
 
