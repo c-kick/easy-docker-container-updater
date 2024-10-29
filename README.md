@@ -255,7 +255,7 @@ This is a description of all the available parameters you can (or must) enter in
 | sendmail       | Path to the `sendmail` executable, typically does not need modification.                                                            | No       | `'/usr/sbin/sendmail'` | `'/usr/sbin/sendmail'` |
 
 ## Container configuration entry
-These are the assignable parameters for each container entry in the `containers` inside your `container-config.js`.
+These are the assignable parameters for each container entry in `containers` inside your `container-config.js`.
 
 | Parameter      | Description                                                                                           | Required | Example                         | Default  |
 |----------------|-------------------------------------------------------------------------------------------------------|----------|---------------------------------|----------|
