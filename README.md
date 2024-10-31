@@ -54,7 +54,7 @@ To update a specific container:
 
 ### Why not just use Watchtower?
 
-By all means, if you use them; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that those management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
+By all means, if you use Watchtower; great! Then this script is not for you. Easy Docker Container Updater doesn't offer any new features or functionality that existing management-tools lack. Instead, it’s designed specifically for users who find those tools overly complex or intimidating for their needs.
 
 The main *'raison d'être'* for Easy Docker Container Updater is that I needed to break out of the constraints of Synology's native container manager, create a simple way to define container configurations with common parameters that I could use across multiple containers (such as path mappings), and have my containers update automatically without any intervention from me whatsoever. And make all this managable in one place.
 
@@ -85,71 +85,7 @@ If you have Git installed, you can clone the repository inside the directory of 
 > **Note:** See the [Reference section](#reference) for a description of all options you can use.
 
 - Open `container-config.js` in a text editor and adjust the `options` object to fit your setup (the only required, and mandatory settings is `configBasePath`).
-- Each container you wish to manage/update should be defined in the `containers` object, where you can specify container images, arguments, network modes, and more. See the [reference section](#container-configuration-entry) for a list of available settings.
-
-<details>
-  <summary>Click here for an example container config entry</summary>
-	
-  ### Example Container Configuration
-
-  Note: `container-config-example.js` also contains an example configuration.
-
-  ```js
-  'plex': {
-
-    debug: true, //optional - override debug mode for this container
-
-    image: 'plexinc/pms-docker:plexpass', // required - the repository & image to use
-
-    alwaysRun: false, // optional - if true, this will force the container to run, even when it was stopped prior to updating. Note: this is *not* the restart policy, which is configured inside the `arguments` object (below).
-
-    // The arguments that will be passed to 'docker create'
-    // Note: all arguments are optional. If you have no arguments, just leave it empty (`arguments: {}`)
-    arguments: {
-
-      net: 	'bridge', // Network mode (bridge, host, etc)
-
-      // If you need ports (i.e. in 'bridge' network mode)
-      // specify them here, as [host-side-port, container-side-port]
-      p: [
-	[32400, 32400],
-      ],
-
-      // Volume mappings
-      v: [
-	['/my-custom/path-1', '/path-1/'],
-	//add more if needed
-      ],
-
-      // Environment variables
-      e: {
-	TZ: 'Europe/Amsterdam',
-	PLEX_UID: 1234,
-	PLEX_GID: 45678
-	//add more if needed
-      },
-
-      // Device mappings
-      device: [
-	['/dev/dri', '/dev/dri'],
-	//add more if needed
-      ],
-
-      privileged: 	false,	// optional - privileged mode
-
-      memory:		'768m', // optional - memory limit
-     
-      restart: 		'always', // optional - restart policy
-
-      // Add whatever other arguments you need. E.g. stuff like: gpus: 'all'
-    },
-
-  },
-  ```
-> **Note:** Optional values will fall back to defaults inside the `options` object (and if not there, to hard-coded defaults), if not specified.
-
-> **Note:** If you have many containers configured, but want to debug just one of them, you can override the global `debug` flag from *inside* a container config. Just set `debug : true` in the container's config entry (as shown in the example).
-</details>
+- Each container you wish to manage/update should be defined in the `containers` object. See the 'plex' container example inside `container-config-example.js`, and consult the [reference section](#container-configuration-entry) for a list of available settings.
 
 ## Usage
 
@@ -243,7 +179,7 @@ This is a description of all the available parameters you can (or must) enter in
 | Parameter      | Description                                                                                                                         | Required | Example              | Default              |
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------|----------|----------------------|----------------------|
 | configBasePath | The base path used to store container configurations. This path will be appended with `/<container-name>/config/` on container creation. If the path already exists, it will be used; otherwise, it will be created as an empty directory. | Yes      | `/volume1/docker`    | N/A                  |
-| debug          | Global debug flag that controls if detailed debug messages are shown.                                                               | No       | `false`              | `false`              |
+| debug          | Global debug flag that, when enabled, only shows the Docker commands, but doesn't execute them, and shows detailed debug messages.                                                               | No       | `false`              | `false`              |
 | logLevel       | Logging level. `0` shows all logs, `1` shows info, warnings, and errors, `2` shows warnings and errors, `3` shows only errors.      | No       | `1`                  | `1`                  |
 | network        | Global network type for containers.                                                                                                 | No       | `'host'`             | `'host'`             |
 | timezone       | Global timezone setting for containers.                                                                                             | No       | `'Europe/Amsterdam'` | `'Europe/Amsterdam'` |
