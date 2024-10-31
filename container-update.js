@@ -340,7 +340,7 @@ function createContainer(containerName, container) {
   _execSync(createCmd.replace(/\s+/g, ' '), {
     debug:   (containerDebug ?? options.debug),
     success: () => {
-      logger.log(`Container created.`, {override: true});
+      logger.log(`Container created.`);
     }
   });
 }
