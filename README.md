@@ -84,7 +84,7 @@ If you have Git installed, you can clone the repository inside the directory of 
 ## Configuration
 > **Note:** See the [Reference section](#reference) for a description of all options you can use.
 
-- Open `container-config.js` in a text editor and adjust the `options` object to fit your setup (the only required, and mandatory settings is `configBasePath`).
+- Open `container-config.js` in a text editor and adjust the `options` object to fit your setup (the only required, and mandatory setting is `configBasePath`).
 - Each container you wish to manage/update should be defined in the `containers` object. See the 'plex' container example inside `container-config-example.js`, and consult the [reference section](#container-configuration-entry) for a list of available settings.
 
 ## Usage
@@ -184,7 +184,7 @@ This is a description of all the available parameters you can (or must) enter in
 | network        | Global network type for containers.                                                                                                 | No       | `'host'`             | `'host'`             |
 | timezone       | Global timezone setting for containers.                                                                                             | No       | `'Europe/Amsterdam'` | `'Europe/Amsterdam'` |
 | alwaysRun      | If true, the container will always run after updating, even if it was stopped before.                                               | No       | `false`              | `false`              |
-| prune          | Global setting for removing unused containers after updating.                                                                       | No       | `true`               | `true`               |
+| prune          | Global setting for removing unused images after updating.                                                                       | No       | `true`               | `true`               |
 | restart        | Global restart policy for containers (e.g., `'always'`, `'unless-stopped'`).                                                        | No       | `'on-failure'`   	 | `'unless-stopped'`   |
 | PUID           | User ID to set the Docker container user.                                                                                           | No       | `1234`               | `1000`               |
 | PGID           | Group ID to set the Docker container group.                                                                                         | No       | `56789`              | `1000`               |
