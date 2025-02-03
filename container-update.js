@@ -459,6 +459,12 @@ async function updateAllContainers(forced = false) {
     };
 
     for (const containerName of Object.keys(containers)) {
+      const container = containers[containerName];
+      if (container.autoUpdate !== undefined && !container.autoUpdate) {
+        logger.info(`Container '${containerName}' is explicitly set to not auto-update, skipping...\n`, {override: true});
+        continue;
+      }
+
       const result = updateContainer(containerName, forced);
 
       // Increment the total containers processed
